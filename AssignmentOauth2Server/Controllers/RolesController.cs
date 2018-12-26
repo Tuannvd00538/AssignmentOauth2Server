@@ -11,56 +11,56 @@ namespace AssignmentOauth2Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountsController : ControllerBase
+    public class RolesController : ControllerBase
     {
         private readonly AssignmentOauth2ServerContext _context;
 
-        public AccountsController(AssignmentOauth2ServerContext context)
+        public RolesController(AssignmentOauth2ServerContext context)
         {
             _context = context;
         }
 
-        // GET: api/Accounts
+        // GET: api/Roles
         [HttpGet]
-        public IEnumerable<Account> GetAccount()
+        public IEnumerable<Role> GetRole()
         {
-            return _context.Account;
+            return _context.Role;
         }
 
-        // GET: api/Accounts/5
+        // GET: api/Roles/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAccount([FromRoute] string id)
+        public async Task<IActionResult> GetRole([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var account = await _context.Account.FindAsync(id);
+            var role = await _context.Role.FindAsync(id);
 
-            if (account == null)
+            if (role == null)
             {
                 return NotFound();
             }
 
-            return Ok(account);
+            return Ok(role);
         }
 
-        // PUT: api/Accounts/5
+        // PUT: api/Roles/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAccount([FromRoute] string id, [FromBody] Account account)
+        public async Task<IActionResult> PutRole([FromRoute] int id, [FromBody] Role role)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != account.Id)
+            if (id != role.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(account).State = EntityState.Modified;
+            _context.Entry(role).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +68,7 @@ namespace AssignmentOauth2Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AccountExists(id))
+                if (!RoleExists(id))
                 {
                     return NotFound();
                 }
@@ -81,47 +81,45 @@ namespace AssignmentOauth2Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Accounts
+        // POST: api/Roles
         [HttpPost]
-        public async Task<IActionResult> PostAccount([FromBody] Account account)
+        public async Task<IActionResult> PostRole([FromBody] Role role)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            //account.Password = SecurityHelper
-
-            _context.Account.Add(account);
+            _context.Role.Add(role);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAccount", new { id = account.Id }, account);
+            return CreatedAtAction("GetRole", new { id = role.Id }, role);
         }
 
-        // DELETE: api/Accounts/5
+        // DELETE: api/Roles/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAccount([FromRoute] string id)
+        public async Task<IActionResult> DeleteRole([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var account = await _context.Account.FindAsync(id);
-            if (account == null)
+            var role = await _context.Role.FindAsync(id);
+            if (role == null)
             {
                 return NotFound();
             }
 
-            _context.Account.Remove(account);
+            _context.Role.Remove(role);
             await _context.SaveChangesAsync();
 
-            return Ok(account);
+            return Ok(role);
         }
 
-        private bool AccountExists(string id)
+        private bool RoleExists(int id)
         {
-            return _context.Account.Any(e => e.Id == id);
+            return _context.Role.Any(e => e.Id == id);
         }
     }
 }

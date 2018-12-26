@@ -11,56 +11,56 @@ namespace AssignmentOauth2Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountsController : ControllerBase
+    public class MarksController : ControllerBase
     {
         private readonly AssignmentOauth2ServerContext _context;
 
-        public AccountsController(AssignmentOauth2ServerContext context)
+        public MarksController(AssignmentOauth2ServerContext context)
         {
             _context = context;
         }
 
-        // GET: api/Accounts
+        // GET: api/Marks
         [HttpGet]
-        public IEnumerable<Account> GetAccount()
+        public IEnumerable<Mark> GetMark()
         {
-            return _context.Account;
+            return _context.Mark;
         }
 
-        // GET: api/Accounts/5
+        // GET: api/Marks/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAccount([FromRoute] string id)
+        public async Task<IActionResult> GetMark([FromRoute] long id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var account = await _context.Account.FindAsync(id);
+            var mark = await _context.Mark.FindAsync(id);
 
-            if (account == null)
+            if (mark == null)
             {
                 return NotFound();
             }
 
-            return Ok(account);
+            return Ok(mark);
         }
 
-        // PUT: api/Accounts/5
+        // PUT: api/Marks/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAccount([FromRoute] string id, [FromBody] Account account)
+        public async Task<IActionResult> PutMark([FromRoute] long id, [FromBody] Mark mark)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != account.Id)
+            if (id != mark.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(account).State = EntityState.Modified;
+            _context.Entry(mark).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +68,7 @@ namespace AssignmentOauth2Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AccountExists(id))
+                if (!MarkExists(id))
                 {
                     return NotFound();
                 }
@@ -81,47 +81,45 @@ namespace AssignmentOauth2Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Accounts
+        // POST: api/Marks
         [HttpPost]
-        public async Task<IActionResult> PostAccount([FromBody] Account account)
+        public async Task<IActionResult> PostMark([FromBody] Mark mark)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            //account.Password = SecurityHelper
-
-            _context.Account.Add(account);
+            _context.Mark.Add(mark);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAccount", new { id = account.Id }, account);
+            return CreatedAtAction("GetMark", new { id = mark.Id }, mark);
         }
 
-        // DELETE: api/Accounts/5
+        // DELETE: api/Marks/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAccount([FromRoute] string id)
+        public async Task<IActionResult> DeleteMark([FromRoute] long id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var account = await _context.Account.FindAsync(id);
-            if (account == null)
+            var mark = await _context.Mark.FindAsync(id);
+            if (mark == null)
             {
                 return NotFound();
             }
 
-            _context.Account.Remove(account);
+            _context.Mark.Remove(mark);
             await _context.SaveChangesAsync();
 
-            return Ok(account);
+            return Ok(mark);
         }
 
-        private bool AccountExists(string id)
+        private bool MarkExists(long id)
         {
-            return _context.Account.Any(e => e.Id == id);
+            return _context.Mark.Any(e => e.Id == id);
         }
     }
 }

@@ -11,56 +11,56 @@ namespace AssignmentOauth2Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountsController : ControllerBase
+    public class PeopleController : ControllerBase
     {
         private readonly AssignmentOauth2ServerContext _context;
 
-        public AccountsController(AssignmentOauth2ServerContext context)
+        public PeopleController(AssignmentOauth2ServerContext context)
         {
             _context = context;
         }
 
-        // GET: api/Accounts
+        // GET: api/People
         [HttpGet]
-        public IEnumerable<Account> GetAccount()
+        public IEnumerable<Person> GetPerson()
         {
-            return _context.Account;
+            return _context.Person;
         }
 
-        // GET: api/Accounts/5
+        // GET: api/People/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAccount([FromRoute] string id)
+        public async Task<IActionResult> GetPerson([FromRoute] string id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var account = await _context.Account.FindAsync(id);
+            var person = await _context.Person.FindAsync(id);
 
-            if (account == null)
+            if (person == null)
             {
                 return NotFound();
             }
 
-            return Ok(account);
+            return Ok(person);
         }
 
-        // PUT: api/Accounts/5
+        // PUT: api/People/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAccount([FromRoute] string id, [FromBody] Account account)
+        public async Task<IActionResult> PutPerson([FromRoute] string id, [FromBody] Person person)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != account.Id)
+            if (id != person.AccountId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(account).State = EntityState.Modified;
+            _context.Entry(person).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +68,7 @@ namespace AssignmentOauth2Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AccountExists(id))
+                if (!PersonExists(id))
                 {
                     return NotFound();
                 }
@@ -81,47 +81,45 @@ namespace AssignmentOauth2Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Accounts
+        // POST: api/People
         [HttpPost]
-        public async Task<IActionResult> PostAccount([FromBody] Account account)
+        public async Task<IActionResult> PostPerson([FromBody] Person person)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            //account.Password = SecurityHelper
-
-            _context.Account.Add(account);
+            _context.Person.Add(person);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAccount", new { id = account.Id }, account);
+            return CreatedAtAction("GetPerson", new { id = person.AccountId }, person);
         }
 
-        // DELETE: api/Accounts/5
+        // DELETE: api/People/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAccount([FromRoute] string id)
+        public async Task<IActionResult> DeletePerson([FromRoute] string id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var account = await _context.Account.FindAsync(id);
-            if (account == null)
+            var person = await _context.Person.FindAsync(id);
+            if (person == null)
             {
                 return NotFound();
             }
 
-            _context.Account.Remove(account);
+            _context.Person.Remove(person);
             await _context.SaveChangesAsync();
 
-            return Ok(account);
+            return Ok(person);
         }
 
-        private bool AccountExists(string id)
+        private bool PersonExists(string id)
         {
-            return _context.Account.Any(e => e.Id == id);
+            return _context.Person.Any(e => e.AccountId == id);
         }
     }
 }

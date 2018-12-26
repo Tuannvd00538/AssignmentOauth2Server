@@ -11,56 +11,56 @@ namespace AssignmentOauth2Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountsController : ControllerBase
+    public class SubjectsController : ControllerBase
     {
         private readonly AssignmentOauth2ServerContext _context;
 
-        public AccountsController(AssignmentOauth2ServerContext context)
+        public SubjectsController(AssignmentOauth2ServerContext context)
         {
             _context = context;
         }
 
-        // GET: api/Accounts
+        // GET: api/Subjects
         [HttpGet]
-        public IEnumerable<Account> GetAccount()
+        public IEnumerable<Subject> GetSubject()
         {
-            return _context.Account;
+            return _context.Subject;
         }
 
-        // GET: api/Accounts/5
+        // GET: api/Subjects/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAccount([FromRoute] string id)
+        public async Task<IActionResult> GetSubject([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var account = await _context.Account.FindAsync(id);
+            var subject = await _context.Subject.FindAsync(id);
 
-            if (account == null)
+            if (subject == null)
             {
                 return NotFound();
             }
 
-            return Ok(account);
+            return Ok(subject);
         }
 
-        // PUT: api/Accounts/5
+        // PUT: api/Subjects/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAccount([FromRoute] string id, [FromBody] Account account)
+        public async Task<IActionResult> PutSubject([FromRoute] int id, [FromBody] Subject subject)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != account.Id)
+            if (id != subject.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(account).State = EntityState.Modified;
+            _context.Entry(subject).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +68,7 @@ namespace AssignmentOauth2Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AccountExists(id))
+                if (!SubjectExists(id))
                 {
                     return NotFound();
                 }
@@ -81,47 +81,45 @@ namespace AssignmentOauth2Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Accounts
+        // POST: api/Subjects
         [HttpPost]
-        public async Task<IActionResult> PostAccount([FromBody] Account account)
+        public async Task<IActionResult> PostSubject([FromBody] Subject subject)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            //account.Password = SecurityHelper
-
-            _context.Account.Add(account);
+            _context.Subject.Add(subject);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAccount", new { id = account.Id }, account);
+            return CreatedAtAction("GetSubject", new { id = subject.Id }, subject);
         }
 
-        // DELETE: api/Accounts/5
+        // DELETE: api/Subjects/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAccount([FromRoute] string id)
+        public async Task<IActionResult> DeleteSubject([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var account = await _context.Account.FindAsync(id);
-            if (account == null)
+            var subject = await _context.Subject.FindAsync(id);
+            if (subject == null)
             {
                 return NotFound();
             }
 
-            _context.Account.Remove(account);
+            _context.Subject.Remove(subject);
             await _context.SaveChangesAsync();
 
-            return Ok(account);
+            return Ok(subject);
         }
 
-        private bool AccountExists(string id)
+        private bool SubjectExists(int id)
         {
-            return _context.Account.Any(e => e.Id == id);
+            return _context.Subject.Any(e => e.Id == id);
         }
     }
 }
