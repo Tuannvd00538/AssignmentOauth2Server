@@ -1,0 +1,5 @@
+# AssignmentOauth2Server
+
+```
+SayHi();
+```
