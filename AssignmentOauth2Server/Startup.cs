@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using AssignmentOauth2Server.Models;
 
 namespace AssignmentOauth2Server
 {
@@ -33,6 +35,9 @@ namespace AssignmentOauth2Server
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddDbContext<AssignmentOauth2ServerContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("AssignmentOauth2ServerContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
