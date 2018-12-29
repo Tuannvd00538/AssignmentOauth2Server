@@ -11,11 +11,22 @@ namespace AssignmentOauth2Server.Models
         [Key]
         public int Id { get; set; }
 
-        [StringLength(50)]
         public string Name { get; set; }
 
-        [StringLength(1000)]
         public string Description { get; set; }
-        public int Status { get; set; }
+
+        public SubjectStatus Status { get; set; }
+
+        public DateTime StartTime { get; set; }
+
+        public DateTime EndTime { get; set; }
+
+        public DateTime IntendTime { get; set; }
+    }
+
+    public enum SubjectStatus
+    {
+        Active = 1,
+        Deactive = 0
     }
 }

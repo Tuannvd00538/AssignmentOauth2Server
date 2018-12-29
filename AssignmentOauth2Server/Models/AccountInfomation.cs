@@ -7,35 +7,29 @@ using System.Threading.Tasks;
 
 namespace AssignmentOauth2Server.Models
 {
-    public class Person
+    public class AccountInfomation
     {
         [Key]
-        [StringLength(50)]
         [ForeignKey("Account")]
-        public string AccountId { get; set; }
+        public long OwnerId { get; set; }
 
-        [StringLength(50)]
         public string FirstName { get; set; }
 
-        [StringLength(50)]
         public string LastName { get; set; }
 
-        [DataType(DataType.Date)]
         public DateTime BirthDay { get; set; }
 
-        [StringLength(50)]
         public string Phone { get; set; }
 
-        public Gender Gender { get; set; }
-
-        public string Avatar { get; set; }
+        public AccountGender Gender { get; set; }
 
         public Account Account { get; set; }
     }
 
-    public enum Gender
+    public enum AccountGender
     {
+        Female = 0,
         Male = 1,
-        Female = 0
+        Other = 2
     }
 }

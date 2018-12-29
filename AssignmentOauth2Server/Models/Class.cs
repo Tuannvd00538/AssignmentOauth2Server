@@ -9,18 +9,24 @@ namespace AssignmentOauth2Server.Models
 {
     public class Class
     {
-        [StringLength(50)]
-        public string Id { get; set; }
-
-        [DataType(DataType.Date)]
-        public DateTime StartDate { get; set; }
-
-        [StringLength(50)]
-        public string Session { get; set; }
-        public int Status { get; set; }
-
         [Key]
+        public int Id { get; set; }
+
+        public DateTime StartTime { get; set; }
+
+        public DateTime EndTime { get; set; }
+
+        public DateTime IntendTime { get; set; }
+
+        public ClassStatus Status { get; set; }
+        
         [ForeignKey("Subject")]
         public int CurrentSubjectId { get; set; }
+    }
+
+    public enum ClassStatus
+    {
+        Active = 1,
+        Deactive = 0
     }
 }

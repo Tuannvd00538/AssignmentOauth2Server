@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using AssignmentOauth2Server.Models;
 
 namespace AssignmentOauth2Server.Models
 {
@@ -14,16 +13,10 @@ namespace AssignmentOauth2Server.Models
         {
         }
 
-        public DbSet<AssignmentOauth2Server.Models.Account> Account { get; set; }
+        public DbSet<Account> Account { get; set; }
 
-        public DbSet<AssignmentOauth2Server.Models.Person> Person { get; set; }
+        public DbSet<AccountInfomation> AccountInfomation { get; set; }
 
-        public DbSet<AssignmentOauth2Server.Models.Role> Role { get; set; }
-
-        public DbSet<AssignmentOauth2Server.Models.Class> Class { get; set; }
-
-        public DbSet<AssignmentOauth2Server.Models.Subject> Subject { get; set; }
-
-        public DbSet<AssignmentOauth2Server.Models.Mark> Mark { get; set; }
+        public DbSet<Credential> Credential { get; set; }
     }
 }

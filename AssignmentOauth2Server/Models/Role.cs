@@ -11,17 +11,20 @@ namespace AssignmentOauth2Server.Models
         [Key]
         public int Id { get; set; }
 
-        [StringLength(50)]
         public string Name { get; set; }
-        public int Status { get; set; }
 
-        [DataType(DataType.Date)]
         public DateTime CreatedAt { get; set; }
 
-        [DataType(DataType.Date)]
         public DateTime UpdatedAt { get; set; }
 
-        [DataType(DataType.Date)]
         public DateTime DeletedAt { get; set; }
+
+        public RoleStatus Status { get; set; }
+    }
+
+    public enum RoleStatus
+    {
+        Active = 1,
+        Deactive = 0
     }
 }

@@ -7,16 +7,14 @@ using System.Threading.Tasks;
 
 namespace AssignmentOauth2Server.Models
 {
-    public class StudentClass
+    public class Classes
     {
         [Key]
-        [StringLength(50)]
-        [ForeignKey("Class")]
-        public string ClassId { get; set; }
+        [ForeignKey("Account")]
+        public long OwnerId { get; set; }
 
         [Key]
-        [StringLength(50)]
-        [ForeignKey("Account")]
-        public string AccountId { get; set; }
+        [ForeignKey("Class")]
+        public string ClassId { get; set; }
     }
 }

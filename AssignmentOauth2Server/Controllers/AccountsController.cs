@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AssignmentOauth2Server.Models;
+using SecurityHelper;
 
 namespace AssignmentOauth2Server.Controllers
 {
@@ -29,7 +30,7 @@ namespace AssignmentOauth2Server.Controllers
 
         // GET: api/Accounts/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAccount([FromRoute] string id)
+        public async Task<IActionResult> GetAccount([FromRoute] long id)
         {
             if (!ModelState.IsValid)
             {
@@ -48,7 +49,7 @@ namespace AssignmentOauth2Server.Controllers
 
         // PUT: api/Accounts/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAccount([FromRoute] string id, [FromBody] Account account)
+        public async Task<IActionResult> PutAccount([FromRoute] long id, [FromBody] Account account)
         {
             if (!ModelState.IsValid)
             {
@@ -90,9 +91,11 @@ namespace AssignmentOauth2Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            //account.Password = SecurityHelper
+            account.Salt = PasswordHandle.GetInstance().GenerateSalt();
+            account.Password = PasswordHandle.GetInstance().EncryptPassword(account.Password, account.Salt);
 
             _context.Account.Add(account);
+            _context.AccountInfomation.Add(account.AccountInfomation);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetAccount", new { id = account.Id }, account);
@@ -100,7 +103,7 @@ namespace AssignmentOauth2Server.Controllers
 
         // DELETE: api/Accounts/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAccount([FromRoute] string id)
+        public async Task<IActionResult> DeleteAccount([FromRoute] long id)
         {
             if (!ModelState.IsValid)
             {
@@ -119,7 +122,7 @@ namespace AssignmentOauth2Server.Controllers
             return Ok(account);
         }
 
-        private bool AccountExists(string id)
+        private bool AccountExists(long id)
         {
             return _context.Account.Any(e => e.Id == id);
         }

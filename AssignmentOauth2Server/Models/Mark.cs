@@ -12,17 +12,35 @@ namespace AssignmentOauth2Server.Models
         [Key]
         public long Id { get; set; }
 
+        public float Value { get; set; }
+
+        public MarkType MarkType { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime UpdatedAt { get; set; }
+
+        public MarkStatus Status { get; set; }
+
+        [Key]
+        [ForeignKey("Account")]
+        public long OwnerId { get; set; }
+
+        [Key]
         [ForeignKey("Subject")]
         public int SubjectId { get; set; }
+    }
 
-        [StringLength(50)]
-        [ForeignKey("Account")]
-        public string AccountId { get; set; }
-        public float Value { get; set; }
-        public int MarkType { get; set; }
+    public enum MarkType
+    {
+        Theory = 0,
+        Practice = 1,
+        Assignment = 3
+    }
 
-        [DataType(DataType.Date)]
-        public DateTime CreatedAt { get; set; }
-        public int Status { get; set; }
+    public enum MarkStatus
+    {
+        Active = 1,
+        Deactive = 0
     }
 }
