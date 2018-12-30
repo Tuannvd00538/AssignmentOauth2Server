@@ -10,10 +10,11 @@ namespace AssignmentOauth2Server.Models
     public class Classes
     {
         [Key]
+        public int Id { get; set; }
+
         [ForeignKey("Account")]
         public long OwnerId { get; set; }
-
-        [Key]
+        
         [ForeignKey("Class")]
         public string ClassId { get; set; }
     }

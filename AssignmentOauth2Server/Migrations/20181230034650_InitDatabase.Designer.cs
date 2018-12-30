@@ -4,14 +4,16 @@ using AssignmentOauth2Server.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AssignmentOauth2Server.Migrations
 {
     [DbContext(typeof(AssignmentOauth2ServerContext))]
-    partial class AssignmentOauth2ServerContextModelSnapshot : ModelSnapshot
+    [Migration("20181230034650_InitDatabase")]
+    partial class InitDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -78,25 +80,6 @@ namespace AssignmentOauth2Server.Migrations
                     b.ToTable("AccountInfomation");
                 });
 
-            modelBuilder.Entity("AssignmentOauth2Server.Models.Class", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("EndTime");
-
-                    b.Property<DateTime>("IntendTime");
-
-                    b.Property<DateTime>("StartTime");
-
-                    b.Property<int>("Status");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Class");
-                });
-
             modelBuilder.Entity("AssignmentOauth2Server.Models.Credential", b =>
                 {
                     b.Property<string>("AccessToken")
@@ -117,29 +100,6 @@ namespace AssignmentOauth2Server.Migrations
                     b.HasKey("AccessToken");
 
                     b.ToTable("Credential");
-                });
-
-            modelBuilder.Entity("AssignmentOauth2Server.Models.Subject", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description");
-
-                    b.Property<DateTime>("EndTime");
-
-                    b.Property<DateTime>("IntendTime");
-
-                    b.Property<string>("Name");
-
-                    b.Property<DateTime>("StartTime");
-
-                    b.Property<int>("Status");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Subject");
                 });
 
             modelBuilder.Entity("AssignmentOauth2Server.Models.AccountInfomation", b =>

@@ -31,9 +31,8 @@ namespace AssignmentOauth2Server.Migrations
                 name: "Credential",
                 columns: table => new
                 {
-                    OwnerId = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AccessToken = table.Column<string>(nullable: true),
+                    OwnerId = table.Column<long>(nullable: false),
+                    AccessToken = table.Column<string>(nullable: false),
                     RefreshToken = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false),
@@ -42,7 +41,21 @@ namespace AssignmentOauth2Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Credential", x => x.OwnerId);
+                    table.PrimaryKey("PK_Credential", x => x.AccessToken);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Login",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Email = table.Column<string>(nullable: true),
+                    Password = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Login", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,6 +88,9 @@ namespace AssignmentOauth2Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "Credential");
+
+            migrationBuilder.DropTable(
+                name: "Login");
 
             migrationBuilder.DropTable(
                 name: "Account");

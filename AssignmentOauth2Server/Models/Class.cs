@@ -9,6 +9,11 @@ namespace AssignmentOauth2Server.Models
 {
     public class Class
     {
+        public Class()
+        {
+            this.Status = ClassStatus.Active;
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -19,9 +24,6 @@ namespace AssignmentOauth2Server.Models
         public DateTime IntendTime { get; set; }
 
         public ClassStatus Status { get; set; }
-        
-        [ForeignKey("Subject")]
-        public int CurrentSubjectId { get; set; }
     }
 
     public enum ClassStatus

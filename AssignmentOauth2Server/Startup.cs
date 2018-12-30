@@ -38,6 +38,12 @@ namespace AssignmentOauth2Server
 
             services.AddDbContext<AssignmentOauth2ServerContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("AssignmentOauth2ServerContext")));
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +61,7 @@ namespace AssignmentOauth2Server
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseCors("AllowAll");
             app.UseCookiePolicy();
 
             app.UseMvc(routes =>
