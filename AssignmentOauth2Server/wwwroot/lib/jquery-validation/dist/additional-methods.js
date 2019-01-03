@@ -1020,7 +1020,7 @@ $.validator.addMethod( "skip_or_fill_minimum", function( value, element, options
 }, $.validator.format( "Please either skip these fields or fill at least {0} of them." ) );
 
 /* Validates US States and/or Territories by @jdforsythe
- * Can be case insensitive or require capitalization - default is case insensitive
+ * Can be case insensitive or require c__api/v1/v1talization - default is case insensitive
  * Can include US Territories or not - default does not
  * Can include US Military postal abbreviations (AA, AE, AP) - default does not
  *
@@ -1035,7 +1035,7 @@ $.validator.addMethod( "skip_or_fill_minimum", function( value, element, options
  *     includeMilitary: false
  *  }
  *
- *  Only allow capital letters, no territories, no military zones
+ *  Only allow c__api/v1/v1tal letters, no territories, no military zones
  *  stateInput: {
  *     caseSensitive: false
  *  }
@@ -1045,7 +1045,7 @@ $.validator.addMethod( "skip_or_fill_minimum", function( value, element, options
  *     includeTerritories: true
  *  }
  *
- *  Only allow capital letters, include territories and military zones
+ *  Only allow c__api/v1/v1tal letters, include territories and military zones
  *  stateInput: {
  *     caseSensitive: true,
  *     includeTerritories: true,

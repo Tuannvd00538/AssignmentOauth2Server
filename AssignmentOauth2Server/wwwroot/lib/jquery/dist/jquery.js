@@ -2123,7 +2123,7 @@ for ( i in { submit: true, reset: true } ) {
 	Expr.pseudos[ i ] = createButtonPseudo( i );
 }
 
-// Easy API for creating new setFilters
+// Easy __api/v1/v1 for creating new setFilters
 function setFilters() {}
 setFilters.prototype = Expr.filters = Expr.pseudos;
 Expr.setFilters = new setFilters();
@@ -4159,7 +4159,7 @@ var dataUser = new Data();
 
 //	Implementation Summary
 //
-//	1. Enforce API surface and semantic compatibility with 1.9.x branch
+//	1. Enforce __api/v1/v1 surface and semantic compatibility with 1.9.x branch
 //	2. Improve the module's maintainability by reducing the storage
 //		paths to a single mechanism.
 //	3. Use the same single mechanism to support "private" and "user" data.
@@ -5008,7 +5008,7 @@ jQuery.event = {
 			// If event changes its type, use the special event handlers for the changed type
 			special = jQuery.event.special[ type ] || {};
 
-			// If selector defined, determine special event api type, otherwise given type
+			// If selector defined, determine special event __api/v1/v1 type, otherwise given type
 			type = ( selector ? special.delegateType : special.bindType ) || type;
 
 			// Update special based on newly reset type
@@ -9408,10 +9408,10 @@ jQuery.fn.extend( {
 		return this;
 	},
 
-	wrapInner: function( html ) {
+	wr__api/v1/v1nner: function( html ) {
 		if ( isFunction( html ) ) {
 			return this.each( function( i ) {
-				jQuery( this ).wrapInner( html.call( this, i ) );
+				jQuery( this ).wr__api/v1/v1nner( html.call( this, i ) );
 			} );
 		}
 

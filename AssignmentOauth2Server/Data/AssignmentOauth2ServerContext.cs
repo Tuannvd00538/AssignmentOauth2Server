@@ -28,5 +28,7 @@ namespace AssignmentOauth2Server.Models
         public DbSet<AssignmentOauth2Server.Models.Subject> Subject { get; set; }
 
         public DbSet<AssignmentOauth2Server.Models.Classes> Classes { get; set; }
+
+        public DbSet<AssignmentOauth2Server.Models.Role> Role { get; set; }
     }
 }

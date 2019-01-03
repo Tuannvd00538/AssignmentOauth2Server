@@ -9,58 +9,58 @@ using AssignmentOauth2Server.Models;
 
 namespace AssignmentOauth2Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("_api/v1/[controller]")]
     [ApiController]
-    public class SubjectsController : ControllerBase
+    public class RolesController : ControllerBase
     {
         private readonly AssignmentOauth2ServerContext _context;
 
-        public SubjectsController(AssignmentOauth2ServerContext context)
+        public RolesController(AssignmentOauth2ServerContext context)
         {
             _context = context;
         }
 
-        // GET:_api/v1/Subjects
+        // GET: _api/v1/Roles
         [HttpGet]
-        public IEnumerable<Subject> GetSubject()
+        public IEnumerable<Role> GetRole()
         {
-            return _context.Subject;
+            return _context.Role;
         }
 
-        // GET:_api/v1/Subjects/5
+        // GET: _api/v1/Roles/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetSubject([FromRoute] int id)
+        public async Task<IActionResult> GetRole([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var subject = await _context.Subject.FindAsync(id);
+            var role = await _context.Role.FindAsync(id);
 
-            if (subject == null)
+            if (role == null)
             {
                 return NotFound();
             }
 
-            return Ok(subject);
+            return Ok(role);
         }
 
-        // PUT:_api/v1/Subjects/5
+        // PUT: _api/v1/Roles/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSubject([FromRoute] int id, [FromBody] Subject subject)
+        public async Task<IActionResult> PutRole([FromRoute] int id, [FromBody] Role role)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != subject.Id)
+            if (id != role.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(subject).State = EntityState.Modified;
+            _context.Entry(role).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +68,7 @@ namespace AssignmentOauth2Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SubjectExists(id))
+                if (!RoleExists(id))
                 {
                     return NotFound();
                 }
@@ -81,45 +81,45 @@ namespace AssignmentOauth2Server.Controllers
             return NoContent();
         }
 
-        // POST:_api/v1/Subjects
+        // POST: _api/v1/Roles
         [HttpPost]
-        public async Task<IActionResult> PostSubject([FromBody] Subject subject)
+        public async Task<IActionResult> PostRole([FromBody] Role role)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Subject.Add(subject);
+            _context.Role.Add(role);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSubject", new { id = subject.Id }, subject);
+            return CreatedAtAction("GetRole", new { id = role.Id }, role);
         }
 
-        // DELETE:_api/v1/Subjects/5
+        // DELETE: _api/v1/Roles/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSubject([FromRoute] int id)
+        public async Task<IActionResult> DeleteRole([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var subject = await _context.Subject.FindAsync(id);
-            if (subject == null)
+            var role = await _context.Role.FindAsync(id);
+            if (role == null)
             {
                 return NotFound();
             }
 
-            _context.Subject.Remove(subject);
+            _context.Role.Remove(role);
             await _context.SaveChangesAsync();
 
-            return Ok(subject);
+            return Ok(role);
         }
 
-        private bool SubjectExists(int id)
+        private bool RoleExists(int id)
         {
-            return _context.Subject.Any(e => e.Id == id);
+            return _context.Role.Any(e => e.Id == id);
         }
     }
 }

@@ -33,7 +33,7 @@
     }
 
     function escapeAttributeValue(value) {
-        // As mentioned on http://api.jquery.com/category/selectors/
+        // As mentioned on http://__api/v1/v1.jquery.com/category/selectors/
         return value.replace(/([!"#$%&'()*+,./:;<=>?@\[\\\]^`{|}~])/g, "\\$1");
     }
 
