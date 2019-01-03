@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AssignmentOauth2Server.Models;
+using SecurityHelper;
 
 namespace AssignmentOauth2Server.Controllers
 {
@@ -84,17 +85,26 @@ namespace AssignmentOauth2Server.Controllers
         // POST: _api/v1/Accounts/Create
         [HttpPost]
         [Route("Create")]
-        public async Task<IActionResult> PostAccount([FromBody] Account account)
+        public async Task<IActionResult> PostAccount([FromBody] AccountInfomation accountInfomation)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Account.Add(account);
-            await _context.SaveChangesAsync();
+            accountInfomation.Account.Salt = PasswordHandle.GetInstance().GenerateSalt();
+            accountInfomation.Account.Password = PasswordHandle.GetInstance().EncryptPassword(accountInfomation.Account.Password, accountInfomation.Account.Salt);
+            if (AccountExistsByEmail(accountInfomation.Account.Email))
+            {
+                return Conflict("Tài khoản có email " + accountInfomation.Account.Email + " đã tồn tại trên hệ thống, vui lòng kiểm tra lại!");
+            }
+            else
+            {
+                _context.AccountInfomation.Add(accountInfomation);
+                await _context.SaveChangesAsync();
+            }
 
-            return CreatedAtAction("GetAccount", new { id = account.Id }, account);
+            return Ok("Tạo tài khoản thành công!");
         }
 
         // DELETE: _api/v1/Accounts/5
@@ -121,6 +131,11 @@ namespace AssignmentOauth2Server.Controllers
         private bool AccountExists(long id)
         {
             return _context.Account.Any(e => e.Id == id);
+        }
+
+        private bool AccountExistsByEmail(string email)
+        {
+            return _context.Account.Any(e => e.Email == email);
         }
     }
 }
