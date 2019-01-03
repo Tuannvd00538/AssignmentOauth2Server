@@ -4,14 +4,16 @@ using AssignmentOauth2Server.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AssignmentOauth2Server.Migrations
 {
     [DbContext(typeof(AssignmentOauth2ServerContext))]
-    partial class AssignmentOauth2ServerContextModelSnapshot : ModelSnapshot
+    [Migration("20190103085906_InitDatabaseV6")]
+    partial class InitDatabaseV6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -82,9 +84,6 @@ namespace AssignmentOauth2Server.Migrations
                     b.Property<string>("Phone");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OwnerId")
-                        .IsUnique();
 
                     b.ToTable("AccountInfomation");
                 });
@@ -188,14 +187,6 @@ namespace AssignmentOauth2Server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Subject");
-                });
-
-            modelBuilder.Entity("AssignmentOauth2Server.Models.AccountInfomation", b =>
-                {
-                    b.HasOne("AssignmentOauth2Server.Models.Account", "Account")
-                        .WithOne("AccountInfomation")
-                        .HasForeignKey("AssignmentOauth2Server.Models.AccountInfomation", "OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

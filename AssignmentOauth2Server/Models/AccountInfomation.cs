@@ -24,6 +24,8 @@ namespace AssignmentOauth2Server.Models
 
         public string LastName { get; set; }
 
+        public string Avatar { get; set; }
+
         public DateTime BirthDay { get; set; }
 
         public string Phone { get; set; }

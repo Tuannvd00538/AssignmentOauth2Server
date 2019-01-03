@@ -53,8 +53,10 @@ namespace AssignmentOauth2Server.Controllers
                     }
                     else
                     {
-                        var credential = new Credential(existAccount.Id);
-                        credential.AccessToken = PasswordGenerator.Generate(length: 40, allowed: Sets.Alphanumerics);
+                        var credential = new Credential(existAccount.Id)
+                        {
+                            AccessToken = PasswordGenerator.Generate(length: 40, allowed: Sets.Alphanumerics)
+                        };
                         _context.Credential.Add(credential);
                         await _context.SaveChangesAsync();
                         return Ok(credential);

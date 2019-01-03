@@ -47,7 +47,7 @@ namespace AssignmentOauth2Server.Controllers
 
             var accInfo = _context.AccountInfomation.SingleOrDefault(a => a.OwnerId == account.Id);
 
-            return Ok(JsonConvert.SerializeObject(new { account.Email, accInfo.FirstName, accInfo.LastName, accInfo.BirthDay, accInfo.Gender, accInfo.Phone }));
+            return Ok(JsonConvert.SerializeObject(new { account.Email, accInfo.FirstName, accInfo.LastName, accInfo.Avatar, accInfo.BirthDay, accInfo.Gender, accInfo.Phone }));
         }
 
         // PUT: _api/v1/Accounts/5
@@ -85,6 +85,50 @@ namespace AssignmentOauth2Server.Controllers
             return NoContent();
         }
 
+        private static readonly string[] VietnameseSigns = new string[]
+        {
+
+            "aAeEoOuUiIdDyY",
+
+            "áàạảãâấầậẩẫăắằặẳẵ",
+
+            "ÁÀẠẢÃÂẤẦẬẨẪĂẮẰẶẲẴ",
+
+            "éèẹẻẽêếềệểễ",
+
+            "ÉÈẸẺẼÊẾỀỆỂỄ",
+
+            "óòọỏõôốồộổỗơớờợởỡ",
+
+            "ÓÒỌỎÕÔỐỒỘỔỖƠỚỜỢỞỠ",
+
+            "úùụủũưứừựửữ",
+
+            "ÚÙỤỦŨƯỨỪỰỬỮ",
+
+            "íìịỉĩ",
+
+            "ÍÌỊỈĨ",
+
+            "đ",
+
+            "Đ",
+
+            "ýỳỵỷỹ",
+
+            "ÝỲỴỶỸ"
+        };
+
+        public static string RemoveSign4VietnameseString(string str)
+        {
+            for (int i = 1; i < VietnameseSigns.Length; i++)
+            {
+                for (int j = 0; j < VietnameseSigns[i].Length; j++)
+                    str = str.Replace(VietnameseSigns[i][j], VietnameseSigns[0][i - 1]);
+            }
+            return str;
+        }
+
         // POST: _api/v1/Accounts/A~D~M
         [HttpPost("{Rnb}")]
         public async Task<IActionResult> PostAccount([FromRoute] string Rnb, [FromBody] AccountInfomation accountInfomation)
@@ -94,14 +138,14 @@ namespace AssignmentOauth2Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            //string[] allType = { "A", "D", "M" };
-            //if (!allType.Contains(Rnb))
-            //{
-            //    return BadRequest();
-            //}
+            string[] listTypeRole = { "A", "D", "M" };
 
-            //var count = await _context.Account.CountAsync(a => a.RollNumber.Contains(Rnb));
-            var count = 1;
+            if (!listTypeRole.Contains(Rnb))
+            {
+                return BadRequest();
+            }
+
+            var count = await _context.Account.CountAsync(a => a.RollNumber.Contains(Rnb)) + 1;
             string rollNumber;
 
             if (count < 10)
@@ -125,25 +169,54 @@ namespace AssignmentOauth2Server.Controllers
                 rollNumber = count.ToString();
             }
 
-            var rnber = Rnb + rollNumber;
+            var rnber = (Rnb + rollNumber).ToLower();
 
-            return new JsonResult(rnber);
-
-            /*
-            accountInfomation.Account.Salt = PasswordHandle.GetInstance().GenerateSalt();
-            accountInfomation.Account.Password = PasswordHandle.GetInstance().EncryptPassword(accountInfomation.Account.Password, accountInfomation.Account.Salt);
-            if (AccountExistsByEmail(accountInfomation.Account.Email))
+            var str = accountInfomation.FirstName.Split(" ");
+            string email = accountInfomation.LastName;
+            foreach (var item in str)
             {
-                return Conflict("Tài khoản có email " + accountInfomation.Account.Email + " đã tồn tại trên hệ thống, vui lòng kiểm tra lại!");
+                if (item.Any())
+                {
+                    email += item[0];
+                }
+            }
+
+            email = email.ToLower();
+
+            var emailGenerate = RemoveSign4VietnameseString(email + rnber + "@siingroup.com").ToLower();
+            var passwordGenerate = RemoveSign4VietnameseString(email + rnber);
+
+            Account account = new Account
+            {
+                RollNumber = rnber,
+                Email = emailGenerate,
+                Salt = PasswordHandle.GetInstance().GenerateSalt()
+            };
+            account.Password = PasswordHandle.GetInstance().EncryptPassword(passwordGenerate, account.Salt);
+
+            _context.Account.Add(account);
+            
+
+            Login login = new Login
+            {
+                Email = emailGenerate,
+                Password = passwordGenerate
+            };
+
+            if (AccountExistsByPhone(accountInfomation.Phone))
+            {
+                return Conflict("Tài khoản đã tồn tại trên hệ thống, vui lòng kiểm tra lại!");
             }
             else
             {
+                await _context.SaveChangesAsync();
+                accountInfomation.OwnerId = account.Id;
                 _context.AccountInfomation.Add(accountInfomation);
                 await _context.SaveChangesAsync();
             }
-            */
 
-            return Ok("Tạo tài khoản thành công!");
+
+            return Created("", login);
         }
 
         // DELETE: _api/v1/Accounts/5
@@ -172,9 +245,9 @@ namespace AssignmentOauth2Server.Controllers
             return _context.Account.Any(e => e.Id == id);
         }
 
-        private bool AccountExistsByEmail(string email)
+        private bool AccountExistsByPhone(string phone)
         {
-            return _context.Account.Any(e => e.Email == email);
+            return _context.AccountInfomation.Any(e => e.Phone == phone);
         }
     }
 }
