@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AssignmentOauth2Server.Migrations
 {
     [DbContext(typeof(AssignmentOauth2ServerContext))]
-    [Migration("20181230045540_InitDatabaseV1")]
-    partial class InitDatabaseV1
+    [Migration("20190102143254_InitDatabase")]
+    partial class InitDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -63,7 +63,9 @@ namespace AssignmentOauth2Server.Migrations
 
             modelBuilder.Entity("AssignmentOauth2Server.Models.AccountInfomation", b =>
                 {
-                    b.Property<long>("OwnerId");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("BirthDay");
 
@@ -73,9 +75,14 @@ namespace AssignmentOauth2Server.Migrations
 
                     b.Property<string>("LastName");
 
+                    b.Property<long>("OwnerId");
+
                     b.Property<string>("Phone");
 
-                    b.HasKey("OwnerId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId")
+                        .IsUnique();
 
                     b.ToTable("AccountInfomation");
                 });
@@ -99,10 +106,28 @@ namespace AssignmentOauth2Server.Migrations
                     b.ToTable("Class");
                 });
 
+            modelBuilder.Entity("AssignmentOauth2Server.Models.Classes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClassId");
+
+                    b.Property<long>("OwnerId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Classes");
+                });
+
             modelBuilder.Entity("AssignmentOauth2Server.Models.Credential", b =>
                 {
-                    b.Property<string>("AccessToken")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AccessToken");
 
                     b.Property<DateTime>("CreatedAt");
 
@@ -110,13 +135,11 @@ namespace AssignmentOauth2Server.Migrations
 
                     b.Property<long>("OwnerId");
 
-                    b.Property<string>("RefreshToken");
-
                     b.Property<int>("Status");
 
                     b.Property<DateTime>("UpdatedAt");
 
-                    b.HasKey("AccessToken");
+                    b.HasKey("Id");
 
                     b.ToTable("Credential");
                 });

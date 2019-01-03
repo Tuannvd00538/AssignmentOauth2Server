@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AssignmentOauth2Server.Models;
-using SecurityHelper;
 
 namespace AssignmentOauth2Server.Controllers
 {
@@ -21,14 +20,14 @@ namespace AssignmentOauth2Server.Controllers
             _context = context;
         }
 
-        // GET: api/Accounts
+        // GET: _api/v1/Accounts
         [HttpGet]
         public IEnumerable<Account> GetAccount()
         {
             return _context.Account;
         }
 
-        // GET: api/Accounts/5
+        // GET: _api/v1/Accounts/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAccount([FromRoute] long id)
         {
@@ -47,7 +46,7 @@ namespace AssignmentOauth2Server.Controllers
             return Ok(account);
         }
 
-        // PUT: api/Accounts/5
+        // PUT: _api/v1/Accounts/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAccount([FromRoute] long id, [FromBody] Account account)
         {
@@ -82,8 +81,9 @@ namespace AssignmentOauth2Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Accounts
+        // POST: _api/v1/Accounts/Create
         [HttpPost]
+        [Route("Create")]
         public async Task<IActionResult> PostAccount([FromBody] Account account)
         {
             if (!ModelState.IsValid)
@@ -91,16 +91,13 @@ namespace AssignmentOauth2Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            account.Salt = PasswordHandle.GetInstance().GenerateSalt();
-            account.Password = PasswordHandle.GetInstance().EncryptPassword(account.Password, account.Salt);
-
             _context.Account.Add(account);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetAccount", new { id = account.Id }, account);
         }
 
-        // DELETE: api/Accounts/5
+        // DELETE: _api/v1/Accounts/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAccount([FromRoute] long id)
         {

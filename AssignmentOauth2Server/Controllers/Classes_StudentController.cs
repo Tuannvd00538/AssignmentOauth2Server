@@ -91,7 +91,21 @@ namespace AssignmentOauth2Server.Controllers
             }
 
             _context.Classes.Add(classes);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (ClassesExists(classes.Id))
+                {
+                    return new StatusCodeResult(StatusCodes.Status409Conflict);
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return CreatedAtAction("GetClasses", new { id = classes.Id }, classes);
         }

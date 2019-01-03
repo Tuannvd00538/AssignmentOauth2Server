@@ -11,6 +11,7 @@ using SecurityHelper;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Cors;
 using System.Net;
+using MlkPwgen;
 
 namespace AssignmentOauth2Server.Controllers
 {
@@ -19,15 +20,15 @@ namespace AssignmentOauth2Server.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly AssignmentOauth2ServerContext _context;
-        private IMemoryCache _cache;
 
         public AuthenticationController(AssignmentOauth2ServerContext context)
         {
             _context = context;
         }
 
-        // POST: _api/v1/Authentication
+        // POST: _api/v1/Authentication/Login
         [HttpPost]
+        [Route("Login")]
         [EnableCors(PolicyName = "AllowAll")]
         public async Task<IActionResult> PostLogin([FromBody] Login login)
         {
@@ -36,26 +37,32 @@ namespace AssignmentOauth2Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            var loginSuccess = false;
             var existAccount = _context.Account.SingleOrDefault(a => a.Email == login.Email);
             if (existAccount != null)
             {
                 if (existAccount.Password == PasswordHandle.GetInstance().EncryptPassword(login.Password, existAccount.Salt))
                 {
-                    loginSuccess = true;
+                    var existCredential = await _context.Credential.SingleOrDefaultAsync(c =>
+                            c.OwnerId == existAccount.Id);
+                    if (existCredential != null)
+                    {
+                        var accessToken = PasswordGenerator.Generate(length: 40, allowed: Sets.Alphanumerics);
+                        existCredential.AccessToken = accessToken;
+                        await _context.SaveChangesAsync();
+                        return Ok(existCredential);
+                    }
+                    else
+                    {
+                        var credential = new Credential(existAccount.Id);
+                        credential.AccessToken = PasswordGenerator.Generate(length: 40, allowed: Sets.Alphanumerics);
+                        _context.Credential.Add(credential);
+                        await _context.SaveChangesAsync();
+                        return Ok(credential);
+                    }
                 }
+                return BadRequest("Mật khẩu không chính xác!");
             }
-
-            if (loginSuccess)
-            {
-                var credential = new Credential(existAccount.Id);
-                _context.Credential.Add(credential);
-                await _context.SaveChangesAsync();
-                Response.StatusCode = 200;
-                return new JsonResult(credential);
-            };
-            Response.StatusCode = 403;
-            return new JsonResult("Invalid information");
+            return BadRequest("Email hoặc mật khẩu không chính xác!");
         }
 
         public IActionResult CheckToken(string accessToken)

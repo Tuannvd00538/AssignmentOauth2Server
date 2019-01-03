@@ -27,7 +27,7 @@ namespace AssignmentOauth2Server.Controllers
             return _context.Class;
         }
 
-        // GET: api/Classes/5
+        // GET:_api/v1/Classes/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetClass([FromRoute] int id)
         {
@@ -46,7 +46,7 @@ namespace AssignmentOauth2Server.Controllers
             return Ok(@class);
         }
 
-        // PUT: api/Classes/5
+        // PUT:_api/v1/Classes/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutClass([FromRoute] int id, [FromBody] Class @class)
         {
@@ -96,7 +96,7 @@ namespace AssignmentOauth2Server.Controllers
             return CreatedAtAction("GetClass", new { id = @class.Id }, @class);
         }
 
-        // DELETE: api/Classes/5
+        // DELETE:_api/v1/Classes/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteClass([FromRoute] int id)
         {

@@ -9,7 +9,14 @@ namespace AssignmentOauth2Server.Models
 {
     public class AccountInfomation
     {
+        public AccountInfomation()
+        {
+            this.Gender = AccountGender.Other;
+        }
+
         [Key]
+        public int Id { get; set; }
+
         [ForeignKey("Account")]
         public long OwnerId { get; set; }
 

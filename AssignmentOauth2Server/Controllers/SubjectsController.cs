@@ -20,14 +20,14 @@ namespace AssignmentOauth2Server.Controllers
             _context = context;
         }
 
-        // GET: api/Subjects
+        // GET:_api/v1/Subjects
         [HttpGet]
         public IEnumerable<Subject> GetSubject()
         {
             return _context.Subject;
         }
 
-        // GET: api/Subjects/5
+        // GET:_api/v1/Subjects/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSubject([FromRoute] int id)
         {
@@ -46,7 +46,7 @@ namespace AssignmentOauth2Server.Controllers
             return Ok(subject);
         }
 
-        // PUT: api/Subjects/5
+        // PUT:_api/v1/Subjects/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSubject([FromRoute] int id, [FromBody] Subject subject)
         {
@@ -81,7 +81,7 @@ namespace AssignmentOauth2Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Subjects
+        // POST:_api/v1/Subjects
         [HttpPost]
         public async Task<IActionResult> PostSubject([FromBody] Subject subject)
         {
@@ -96,7 +96,7 @@ namespace AssignmentOauth2Server.Controllers
             return CreatedAtAction("GetSubject", new { id = subject.Id }, subject);
         }
 
-        // DELETE: api/Subjects/5
+        // DELETE:_api/v1/Subjects/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSubject([FromRoute] int id)
         {

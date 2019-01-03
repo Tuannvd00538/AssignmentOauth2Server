@@ -17,8 +17,6 @@ namespace AssignmentOauth2Server.Models
 
         public Credential(long OwnerId)
         {
-            this.AccessToken = PasswordGenerator.Generate(length: 40, allowed: Sets.Alphanumerics);
-            this.RefreshToken = PasswordGenerator.Generate(length: 40, allowed: Sets.Alphanumerics);
             this.OwnerId = OwnerId;
             this.CreatedAt = DateTime.Now;
             this.UpdatedAt = DateTime.Now;
@@ -26,13 +24,13 @@ namespace AssignmentOauth2Server.Models
             this.ExpiredAt = DateTime.Now.AddDays(7);
         }
 
+        [Key]
+        public int Id { get; set; }
+
         [ForeignKey("Account")]
         public long OwnerId { get; set; }
 
-        [Key]
         public string AccessToken { get; set; }
-
-        public string RefreshToken { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
