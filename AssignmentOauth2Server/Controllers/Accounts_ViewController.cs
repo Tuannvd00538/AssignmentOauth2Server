@@ -19,9 +19,9 @@ namespace AssignmentOauth2Server.Controllers
         }
 
         // GET: Accounts_View
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Account.ToListAsync());
+            return View();
         }
 
         // GET: Accounts_View/Details/5

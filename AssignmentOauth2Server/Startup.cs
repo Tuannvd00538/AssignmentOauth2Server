@@ -68,7 +68,7 @@ namespace AssignmentOauth2Server
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Accounts_View}/{action=Index}/{id?}");
             });
         }
     }

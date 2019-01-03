@@ -9,6 +9,52 @@ namespace AssignmentOauth2Server.Models
 {
     public class Mark
     {
+        private static readonly int MaxTheory = 10; // 100%.
+        private static readonly int MaxPratice = 15;
+        private static readonly int MaxAssignment = 10;
+        private static readonly int PercentToPass = 40;
+
+        public Mark() { }
+
+        public Mark(MarkType type, int value)
+        {
+            this.MarkType = type;
+            this.Value = value;
+            this.GenerateStatus();
+            this.CreatedAt = DateTime.Now;
+            this.UpdatedAt = DateTime.Now;
+        }
+
+        public Mark(MarkType type, int value, int subjectId, long accountId)
+        {
+            this.SubjectId = subjectId;
+            this.OwnerId = accountId;
+            this.MarkType = type;
+            this.Value = value;
+            this.GenerateStatus();
+            this.CreatedAt = DateTime.Now;
+            this.UpdatedAt = DateTime.Now;
+        }
+
+        private void GenerateStatus()
+        {
+            int max = 0;
+            switch (this.MarkType)
+            {
+                case MarkType.Theory:
+                    max = MaxTheory;
+                    break;
+                case MarkType.Practice:
+                    max = MaxPratice;
+                    break;
+                case MarkType.Assignment:
+                    max = MaxAssignment;
+                    break;
+            }
+            double percent = (this.Value / max) * 100;
+            this.Status = percent >= PercentToPass ? MarkStatus.Pass : MarkStatus.Fail;
+        }
+
         [Key]
         public long Id { get; set; }
 
@@ -21,12 +67,10 @@ namespace AssignmentOauth2Server.Models
         public DateTime UpdatedAt { get; set; }
 
         public MarkStatus Status { get; set; }
-
-        [Key]
+        
         [ForeignKey("Account")]
         public long OwnerId { get; set; }
-
-        [Key]
+        
         [ForeignKey("Subject")]
         public int SubjectId { get; set; }
     }
@@ -40,7 +84,7 @@ namespace AssignmentOauth2Server.Models
 
     public enum MarkStatus
     {
-        Active = 1,
-        Deactive = 0
+        Pass = 1,
+        Fail = 0
     }
 }
