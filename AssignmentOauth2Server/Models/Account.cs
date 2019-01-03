@@ -25,6 +25,8 @@ namespace AssignmentOauth2Server.Models
 
         public string Salt { get; set; }
 
+        public string RollNumber { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }

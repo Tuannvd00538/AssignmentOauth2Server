@@ -4,14 +4,16 @@ using AssignmentOauth2Server.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AssignmentOauth2Server.Migrations
 {
     [DbContext(typeof(AssignmentOauth2ServerContext))]
-    partial class AssignmentOauth2ServerContextModelSnapshot : ModelSnapshot
+    [Migration("20190103073138_InitDatabaseV2")]
+    partial class InitDatabaseV2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

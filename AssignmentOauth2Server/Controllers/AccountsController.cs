@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AssignmentOauth2Server.Models;
 using SecurityHelper;
+using Newtonsoft.Json;
 
 namespace AssignmentOauth2Server.Controllers
 {
@@ -44,7 +45,9 @@ namespace AssignmentOauth2Server.Controllers
                 return NotFound();
             }
 
-            return Ok(account);
+            var accInfo = _context.AccountInfomation.SingleOrDefault(a => a.OwnerId == account.Id);
+
+            return Ok(JsonConvert.SerializeObject(new { account.Email, accInfo.FirstName, accInfo.LastName, accInfo.BirthDay, accInfo.Gender, accInfo.Phone }));
         }
 
         // PUT: _api/v1/Accounts/5
@@ -82,16 +85,51 @@ namespace AssignmentOauth2Server.Controllers
             return NoContent();
         }
 
-        // POST: _api/v1/Accounts/Create
-        [HttpPost]
-        [Route("Create")]
-        public async Task<IActionResult> PostAccount([FromBody] AccountInfomation accountInfomation)
+        // POST: _api/v1/Accounts/A~D~M
+        [HttpPost("{Rnb}")]
+        public async Task<IActionResult> PostAccount([FromRoute] string Rnb, [FromBody] AccountInfomation accountInfomation)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            //string[] allType = { "A", "D", "M" };
+            //if (!allType.Contains(Rnb))
+            //{
+            //    return BadRequest();
+            //}
+
+            //var count = await _context.Account.CountAsync(a => a.RollNumber.Contains(Rnb));
+            var count = 1;
+            string rollNumber;
+
+            if (count < 10)
+            {
+                rollNumber = "0000" + count;
+            }
+            else if (count < 100)
+            {
+                rollNumber = "000" + count;
+            }
+            else if (count < 1000)
+            {
+                rollNumber = "00" + count;
+            }
+            else if (count < 10000)
+            {
+                rollNumber = "0" + count;
+            }
+            else
+            {
+                rollNumber = count.ToString();
+            }
+
+            var rnber = Rnb + rollNumber;
+
+            return new JsonResult(rnber);
+
+            /*
             accountInfomation.Account.Salt = PasswordHandle.GetInstance().GenerateSalt();
             accountInfomation.Account.Password = PasswordHandle.GetInstance().EncryptPassword(accountInfomation.Account.Password, accountInfomation.Account.Salt);
             if (AccountExistsByEmail(accountInfomation.Account.Email))
@@ -103,6 +141,7 @@ namespace AssignmentOauth2Server.Controllers
                 _context.AccountInfomation.Add(accountInfomation);
                 await _context.SaveChangesAsync();
             }
+            */
 
             return Ok("Tạo tài khoản thành công!");
         }
