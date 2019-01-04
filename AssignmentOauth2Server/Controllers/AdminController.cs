@@ -9,85 +9,85 @@ using AssignmentOauth2Server.Models;
 
 namespace AssignmentOauth2Server.Controllers
 {
-    public class RolesController : Controller
+    public class AdminController : Controller
     {
         private readonly AssignmentOauth2ServerContext _context;
 
-        public RolesController(AssignmentOauth2ServerContext context)
+        public AdminController(AssignmentOauth2ServerContext context)
         {
             _context = context;
         }
 
-        // GET: Roles
+        // GET: Admin
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Role.ToListAsync());
+            return View(await _context.Account.ToListAsync());
         }
 
-        // GET: Roles/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: Admin/Details/5
+        public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var role = await _context.Role
+            var account = await _context.Account
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (role == null)
+            if (account == null)
             {
                 return NotFound();
             }
 
-            return View(role);
+            return View(account);
         }
 
-        // GET: Roles/Create
+        // GET: Admin/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Roles/Create
+        // POST: Admin/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,CreatedAt,UpdatedAt,DeletedAt,Status")] Role role)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,BirthDay,Phone")] AccountInfomation account)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(role);
+                _context.Add(account);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(role);
+            return View(account);
         }
 
-        // GET: Roles/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: Admin/Edit/5
+        public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var role = await _context.Role.FindAsync(id);
-            if (role == null)
+            var account = await _context.Account.FindAsync(id);
+            if (account == null)
             {
                 return NotFound();
             }
-            return View(role);
+            return View(account);
         }
 
-        // POST: Roles/Edit/5
+        // POST: Admin/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CreatedAt,UpdatedAt,DeletedAt,Status")] Role role)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Email,Password,Salt,RollNumber,CreatedAt,UpdatedAt,DeletedAt,Status")] Account account)
         {
-            if (id != role.Id)
+            if (id != account.Id)
             {
                 return NotFound();
             }
@@ -96,12 +96,12 @@ namespace AssignmentOauth2Server.Controllers
             {
                 try
                 {
-                    _context.Update(role);
+                    _context.Update(account);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RoleExists(role.Id))
+                    if (!AccountExists(account.Id))
                     {
                         return NotFound();
                     }
@@ -112,41 +112,41 @@ namespace AssignmentOauth2Server.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(role);
+            return View(account);
         }
 
-        // GET: Roles/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: Admin/Delete/5
+        public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var role = await _context.Role
+            var account = await _context.Account
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (role == null)
+            if (account == null)
             {
                 return NotFound();
             }
 
-            return View(role);
+            return View(account);
         }
 
-        // POST: Roles/Delete/5
+        // POST: Admin/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            var role = await _context.Role.FindAsync(id);
-            _context.Role.Remove(role);
+            var account = await _context.Account.FindAsync(id);
+            _context.Account.Remove(account);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RoleExists(int id)
+        private bool AccountExists(long id)
         {
-            return _context.Role.Any(e => e.Id == id);
+            return _context.Account.Any(e => e.Id == id);
         }
     }
 }

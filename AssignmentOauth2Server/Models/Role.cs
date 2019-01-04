@@ -8,6 +8,13 @@ namespace AssignmentOauth2Server.Models
 {
     public class Role
     {
+        public Role()
+        {
+            this.CreatedAt = DateTime.Now;
+            this.UpdatedAt = DateTime.Now;
+            this.Status = RoleStatus.Active;
+        }
+
         [Key]
         public int Id { get; set; }
 

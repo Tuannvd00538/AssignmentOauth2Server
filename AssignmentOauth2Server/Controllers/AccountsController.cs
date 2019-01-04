@@ -47,7 +47,7 @@ namespace AssignmentOauth2Server.Controllers
 
             var accInfo = _context.AccountInfomation.SingleOrDefault(a => a.OwnerId == account.Id);
 
-            return Ok(JsonConvert.SerializeObject(new { account.Email, accInfo.FirstName, accInfo.LastName, accInfo.Avatar, accInfo.BirthDay, accInfo.Gender, accInfo.Phone }));
+            return Ok(JsonConvert.SerializeObject(new { account.Email, account.RollNumber, accInfo.FirstName, accInfo.LastName, accInfo.Avatar, accInfo.BirthDay, accInfo.Gender, accInfo.Phone }));
         }
 
         // PUT: _api/v1/Accounts/5

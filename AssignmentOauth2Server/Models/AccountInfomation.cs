@@ -12,6 +12,7 @@ namespace AssignmentOauth2Server.Models
         public AccountInfomation()
         {
             this.Gender = AccountGender.Other;
+            this.Avatar = "http://svgur.com/i/65U.svg";
         }
 
         [Key]
@@ -33,6 +34,8 @@ namespace AssignmentOauth2Server.Models
         public AccountGender Gender { get; set; }
 
         public Account Account { get; set; }
+
+        public List<Role> RoleList { get; set; }
     }
 
     public enum AccountGender
