@@ -145,6 +145,7 @@ namespace AssignmentOauth2Server.Controllers
                 return BadRequest();
             }
 
+            //Generate RollNumber
             var count = await _context.Account.CountAsync(a => a.RollNumber.Contains(Rnb)) + 1;
             string rollNumber;
 
@@ -171,6 +172,7 @@ namespace AssignmentOauth2Server.Controllers
 
             var rnber = (Rnb + rollNumber).ToLower();
 
+            // Generate Email
             var str = accountInfomation.FirstName.Split(" ");
             string email = accountInfomation.LastName;
             foreach (var item in str)
@@ -186,6 +188,7 @@ namespace AssignmentOauth2Server.Controllers
             var emailGenerate = RemoveSign4VietnameseString(email + rnber + "@siingroup.com").ToLower();
             var passwordGenerate = RemoveSign4VietnameseString(email + rnber);
 
+            //Create new account
             Account account = new Account
             {
                 RollNumber = rnber,
@@ -196,20 +199,24 @@ namespace AssignmentOauth2Server.Controllers
 
             _context.Account.Add(account);
             
-
+            //Create thông tin đăng nhập để trả về response
             Login login = new Login
             {
                 Email = emailGenerate,
                 Password = passwordGenerate
             };
 
+            //Check uniqe by phone
             if (AccountExistsByPhone(accountInfomation.Phone))
             {
                 return Conflict("Tài khoản đã tồn tại trên hệ thống, vui lòng kiểm tra lại!");
             }
             else
             {
+                //Save account
                 await _context.SaveChangesAsync();
+
+                //Get ra account.Id để gán cho FK ownerId bên accountinfomation
                 accountInfomation.OwnerId = account.Id;
                 _context.AccountInfomation.Add(accountInfomation);
                 await _context.SaveChangesAsync();
