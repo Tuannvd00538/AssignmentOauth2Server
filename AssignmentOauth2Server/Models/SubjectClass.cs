@@ -9,6 +9,12 @@ namespace AssignmentOauth2Server.Models
 {
     public class SubjectClass
     {
+        public SubjectClass()
+        {
+            this.CreatedAt = DateTime.Now;
+            this.UpdatedAt = DateTime.Now;
+            this.Status = ProcessStatus.Pending;
+        }
         [Key]
         public int Id { get; set; }
         

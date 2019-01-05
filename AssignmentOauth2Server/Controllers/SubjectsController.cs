@@ -6,89 +6,88 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AssignmentOauth2Server.Models;
-using Microsoft.AspNetCore.Http;
 
 namespace AssignmentOauth2Server.Controllers
 {
-    public class AdminController : Controller
+    public class SubjectsController : Controller
     {
         private readonly AssignmentOauth2ServerContext _context;
 
-        public AdminController(AssignmentOauth2ServerContext context)
+        public SubjectsController(AssignmentOauth2ServerContext context)
         {
             _context = context;
         }
 
-        // GET: Admin
+        // GET: Subjects
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Account.ToListAsync());
+            return View(await _context.Subject.ToListAsync());
         }
 
-        // GET: Admin/Details/5
-        public async Task<IActionResult> Details(long? id)
+        // GET: Subjects/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var account = await _context.Account
+            var subject = await _context.Subject
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (account == null)
+            if (subject == null)
             {
                 return NotFound();
             }
 
-            return View(account);
+            return View(subject);
         }
 
-        // GET: Admin/Create
+        // GET: Subjects/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Admin/Create
+        // POST: Subjects/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,BirthDay,Phone")] AccountInfomation account)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Status")] Subject subject)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(account);
+                _context.Add(subject);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(account);
+            return View(subject);
         }
 
-        // GET: Admin/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        // GET: Subjects/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var account = await _context.Account.FindAsync(id);
-            if (account == null)
+            var subject = await _context.Subject.FindAsync(id);
+            if (subject == null)
             {
                 return NotFound();
             }
-            return View(account);
+            return View(subject);
         }
 
-        // POST: Admin/Edit/5
+        // POST: Subjects/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Email,Password,Salt,RollNumber,CreatedAt,UpdatedAt,DeletedAt,Status")] Account account)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Status")] Subject subject)
         {
-            if (id != account.Id)
+            if (id != subject.Id)
             {
                 return NotFound();
             }
@@ -97,12 +96,12 @@ namespace AssignmentOauth2Server.Controllers
             {
                 try
                 {
-                    _context.Update(account);
+                    _context.Update(subject);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AccountExists(account.Id))
+                    if (!SubjectExists(subject.Id))
                     {
                         return NotFound();
                     }
@@ -113,41 +112,41 @@ namespace AssignmentOauth2Server.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(account);
+            return View(subject);
         }
 
-        // GET: Admin/Delete/5
-        public async Task<IActionResult> Delete(long? id)
+        // GET: Subjects/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var account = await _context.Account
+            var subject = await _context.Subject
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (account == null)
+            if (subject == null)
             {
                 return NotFound();
             }
 
-            return View(account);
+            return View(subject);
         }
 
-        // POST: Admin/Delete/5
+        // POST: Subjects/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var account = await _context.Account.FindAsync(id);
-            _context.Account.Remove(account);
+            var subject = await _context.Subject.FindAsync(id);
+            _context.Subject.Remove(subject);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AccountExists(long id)
+        private bool SubjectExists(int id)
         {
-            return _context.Account.Any(e => e.Id == id);
+            return _context.Subject.Any(e => e.Id == id);
         }
     }
 }

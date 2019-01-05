@@ -8,6 +8,10 @@ namespace AssignmentOauth2Server.Models
 {
     public class Subject
     {
+        public Subject()
+        {
+            this.Status = SubjectStatus.Active;
+        }
         [Key]
         public int Id { get; set; }
 
@@ -16,12 +20,6 @@ namespace AssignmentOauth2Server.Models
         public string Description { get; set; }
 
         public SubjectStatus Status { get; set; }
-
-        public DateTime StartTime { get; set; }
-
-        public DateTime EndTime { get; set; }
-
-        public DateTime IntendTime { get; set; }
     }
 
     public enum SubjectStatus
