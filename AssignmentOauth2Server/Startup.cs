@@ -46,6 +46,8 @@ namespace AssignmentOauth2Server
                     builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
             });
 
+            services.AddDistributedMemoryCache();
+
             services.AddSession(options =>
             {
                 // Set a short timeout for easy testing.
@@ -69,10 +71,10 @@ namespace AssignmentOauth2Server
 
             app.UseHttpsRedirection();
             app.UseCookiePolicy();
+            app.UseSession();
             app.UseStaticFiles();
             app.UseCors("AllowAll");
             //app.UseMiddleware<AuthenticationMiddleware>();
-            app.UseSession();
             app.UseCookiePolicy();
 
             app.UseMvc(routes =>

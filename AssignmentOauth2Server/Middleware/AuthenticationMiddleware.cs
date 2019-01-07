@@ -17,25 +17,22 @@ namespace AssignmentOauth2Server.Middleware
             _next = next;
         }
 
-        public IActionResult CheckLogin(string abc)
-        {
-            //var loggedIdString = HttpContext.Session.GetString("loggedUserToken");
-            return new JsonResult("SayHi()");
-        }
-
         public async Task InvokeAsync(HttpContext context)
         {
-            bool isValid = context.Request.Headers.ContainsKey("Authorization");
+            //bool isValid = context.Request.Headers.ContainsKey("Authorization");
+            var accessToken = context.Items["loggedUserToken"].ToString();
 
-            if (isValid)
+            if (accessToken == null)
             {
 
                 // Call the next delegate/middleware in the pipeline
+                
                 await _next(context);
+                //await context.Response.WriteAsync(accessToken);
             }
             else
             {
-                await context.Response.WriteAsync("Access denied.");
+                await context.Response.WriteAsync(accessToken);
             }
 
 
