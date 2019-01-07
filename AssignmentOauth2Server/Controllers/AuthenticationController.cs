@@ -83,5 +83,33 @@ namespace AssignmentOauth2Server.Controllers
                 return new JsonResult(credential);
             }
         }
+
+        // POST: _api/v1/Authentication/ChangePassword
+        [HttpPost]
+        [Route("ChangePassword")]
+        [EnableCors(PolicyName = "AllowAll")]
+        public async Task<IActionResult> PostChangePassword([FromBody] ChangePassword changepsw)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var existAccount = _context.Account.SingleOrDefault(a => a.Id == changepsw.OwnerId);
+            if (existAccount != null)
+            {
+                if (existAccount.Password == PasswordHandle.GetInstance().EncryptPassword(changepsw.OldPassword, existAccount.Salt))
+                {
+                    existAccount.Password = PasswordHandle.GetInstance().EncryptPassword(changepsw.NewPassword, existAccount.Salt);
+                    await _context.SaveChangesAsync();
+                    return new JsonResult("Đổi mật khẩu thành công!");
+                }
+                return BadRequest("Mật khẩu cũ không chính xác!");
+            }
+            else
+            {
+                return new JsonResult("Tài khoản không tồn tại!");
+            }
+        }
     }
 }

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using AssignmentOauth2Server.Models;
+using AssignmentOauth2Server.Middleware;
 
 namespace AssignmentOauth2Server
 {
@@ -44,6 +45,13 @@ namespace AssignmentOauth2Server
                 options.AddPolicy("AllowAll",
                     builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
             });
+
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromSeconds(60 * 3);
+                options.Cookie.HttpOnly = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,8 +68,11 @@ namespace AssignmentOauth2Server
             }
 
             app.UseHttpsRedirection();
+            app.UseCookiePolicy();
             app.UseStaticFiles();
             app.UseCors("AllowAll");
+            //app.UseMiddleware<AuthenticationMiddleware>();
+            app.UseSession();
             app.UseCookiePolicy();
 
             app.UseMvc(routes =>

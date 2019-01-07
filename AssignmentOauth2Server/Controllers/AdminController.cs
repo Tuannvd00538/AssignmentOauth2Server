@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AssignmentOauth2Server.Models;
 using Microsoft.AspNetCore.Http;
+using SecurityHelper;
+using MlkPwgen;
 
 namespace AssignmentOauth2Server.Controllers
 {
@@ -143,6 +145,55 @@ namespace AssignmentOauth2Server.Controllers
             _context.Account.Remove(account);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Admin/Login
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        //POST: Admin/Login
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login([Bind("Id,Email,Password")] Login login)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var existAccount = _context.Account.SingleOrDefault(a => a.Email == login.Email);
+            if (existAccount != null)
+            {
+                if (existAccount.Password == PasswordHandle.GetInstance().EncryptPassword(login.Password, existAccount.Salt))
+                {
+                    Request.HttpContext.Session.SetString("loggedUserEmail", existAccount.Email);
+                    Request.HttpContext.Session.SetString("loggedUserId", existAccount.Id.ToString());
+                    var existCredential = await _context.Credential.SingleOrDefaultAsync(c =>
+                            c.OwnerId == existAccount.Id);
+                    if (existCredential != null)
+                    {
+                        var accessToken = PasswordGenerator.Generate(length: 40, allowed: Sets.Alphanumerics);
+                        existCredential.AccessToken = accessToken;
+                        Request.HttpContext.Session.SetString("loggedUserToken", accessToken);
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        var credential = new Credential(existAccount.Id)
+                        {
+                            AccessToken = PasswordGenerator.Generate(length: 40, allowed: Sets.Alphanumerics)
+                        };
+                        Request.HttpContext.Session.SetString("loggedUserToken", credential.AccessToken);
+                        _context.Credential.Add(credential);
+                        await _context.SaveChangesAsync();
+                    }
+                    return Redirect("/");
+                }
+                return BadRequest("Mật khẩu không chính xác!");
+            }
+            return BadRequest("Email hoặc mật khẩu không chính xác!");
         }
 
         private bool AccountExists(long id)

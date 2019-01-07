@@ -8,6 +8,10 @@ namespace AssignmentOauth2Server.Controllers
 {
     public class Login
     {
+        public Login()
+        {
+
+        }
         [Key]
         public int Id { get; set; }
 

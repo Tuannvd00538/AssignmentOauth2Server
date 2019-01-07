@@ -1,0 +1,98 @@
+﻿@model AssignmentOauth2Server.Controllers.Login
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = null;
+}
+<style>
+    body {
+        background-color: #607991;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .main {
+        text-align: center;
+        margin: 7% auto;
+    }
+
+        .main div {
+            display: inline-block;
+            border: none;
+        }
+
+        .main .left {
+            background-color: #fff;
+            position: relative;
+            padding: 0 40px;
+        }
+
+    .left h1 {
+        text-align: center;
+        padding-top: 80px;
+        margin-bottom: 20px;
+    }
+
+    .left p {
+        margin-top: 0;
+        text-align: center;
+        color: grey;
+    }
+
+    .left form {
+        text-align: center;
+    }
+        .left form span {
+            display: inherit;
+        }
+
+        .left form input {
+            width: 70%;
+            height: 35px;
+            padding-left: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border: 1px solid #F8F8F8;
+            background-color: #F8F8F8;
+            border-radius: 25px;
+        }
+
+            .left form input:focus {
+                outline: none;
+            }
+
+    ::-webkit-input-placeholder {
+        color: grey;
+        letter-spacing: 1px;
+    }
+
+    .left form input[type="submit"] {
+        background-color: #FFBF37;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .left p.forgot {
+        color: grey;
+        font-size: 12px;
+        padding-top: 100px;
+    }
+</style>
+<div class="main">
+    <div class="left">
+        <h1>Đăng nhập để tiếp tục</h1>
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger" style="display:inline;"></div>
+            <input asp-for="Email" placeholder="Email">
+            <span asp-validation-for="Email" class="text-danger"></span>
+            <input asp-for="Password" placeholder="Mật khẩu">
+            <span asp-validation-for="Password" class="text-danger"></span>
+            <input type="submit" value="Đăng nhập">
+        </form>
+        <p class="forgot">Quên mật khẩu?</p>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
