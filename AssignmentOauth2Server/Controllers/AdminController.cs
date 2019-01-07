@@ -166,7 +166,18 @@ namespace AssignmentOauth2Server.Controllers
             var existAccount = _context.Account.SingleOrDefault(a => a.Email == login.Email);
             if (existAccount != null)
             {
-                if (existAccount.Password == PasswordHandle.GetInstance().EncryptPassword(login.Password, existAccount.Salt))
+                string[] listTypeRole = { "A", "M" };
+                var email = "";
+                if (existAccount.RollNumber.Any())
+                {
+                    email = existAccount.RollNumber[0].ToString();
+                }
+                if (!listTypeRole.Contains(email.ToUpper()))
+                {
+                    HttpContext.Response.StatusCode = (int)System.Net.HttpStatusCode.Forbidden;
+                    return new JsonResult("Bạn không có quyền truy cập!");
+                }
+                else if (existAccount.Password == PasswordHandle.GetInstance().EncryptPassword(login.Password, existAccount.Salt))
                 {
                     HttpContext.Session.SetString("loggedUserEmail", existAccount.Email);
                     HttpContext.Session.SetString("loggedUserId", existAccount.Id.ToString());
