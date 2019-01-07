@@ -34,9 +34,6 @@ namespace AssignmentOauth2Server
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
             services.AddDbContext<AssignmentOauth2ServerContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("AssignmentOauth2ServerContext")));
 
@@ -46,14 +43,16 @@ namespace AssignmentOauth2Server
                     builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
             });
 
+            
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDistributedMemoryCache();
-
             services.AddSession(options =>
             {
                 // Set a short timeout for easy testing.
-                options.IdleTimeout = TimeSpan.FromSeconds(60 * 3);
+                options.IdleTimeout = TimeSpan.FromSeconds(60 * 5);
                 options.Cookie.HttpOnly = true;
             });
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,14 +68,14 @@ namespace AssignmentOauth2Server
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
-            app.UseCookiePolicy();
-            app.UseSession();
+            app.UseHttpsRedirection();           
+           
             app.UseStaticFiles();
             app.UseCors("AllowAll");
-            //app.UseMiddleware<AuthenticationMiddleware>();
+          
             app.UseCookiePolicy();
-
+            app.UseSession();
+            app.UseMiddleware<AuthenticationMiddleware>();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

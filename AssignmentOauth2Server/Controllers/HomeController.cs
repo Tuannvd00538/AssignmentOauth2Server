@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using AssignmentOauth2Server.Models;
 
 namespace AssignmentOauth2Server.Controllers
@@ -12,12 +13,13 @@ namespace AssignmentOauth2Server.Controllers
     {
         public IActionResult Index()
         {
+            HttpContext.Session.SetString("hello", "World");
             return View();
         }
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = "Your application description page." + HttpContext.Session.GetString("hello");
 
             return View();
         }

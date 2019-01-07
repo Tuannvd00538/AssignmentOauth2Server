@@ -66,10 +66,7 @@ namespace AssignmentOauth2Server.Controllers
             }
             return BadRequest("Email hoặc mật khẩu không chính xác!");
         }
-
-        // POST: _api/v1/Authentication/Token
-        [HttpPost]
-        [Route("Token")]
+        
         public IActionResult CheckToken(string accessToken)
         {
             var credential = _context.Credential.SingleOrDefault(t => t.AccessToken == accessToken);

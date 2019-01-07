@@ -168,15 +168,15 @@ namespace AssignmentOauth2Server.Controllers
             {
                 if (existAccount.Password == PasswordHandle.GetInstance().EncryptPassword(login.Password, existAccount.Salt))
                 {
-                    HttpContext.Request.HttpContext.Items["loggedUserEmail"] = existAccount.Email;
-                    HttpContext.Request.HttpContext.Items["loggedUserId"] = existAccount.Id.ToString();
+                    HttpContext.Session.SetString("loggedUserEmail", existAccount.Email);
+                    HttpContext.Session.SetString("loggedUserId", existAccount.Id.ToString());
                     var existCredential = await _context.Credential.SingleOrDefaultAsync(c =>
                             c.OwnerId == existAccount.Id);
                     if (existCredential != null)
                     {
                         var accessToken = PasswordGenerator.Generate(length: 40, allowed: Sets.Alphanumerics);
                         existCredential.AccessToken = accessToken;
-                        HttpContext.Request.HttpContext.Items["loggedUserToken"] = accessToken;
+                        HttpContext.Session.SetString("loggedUserToken", accessToken);
                         await _context.SaveChangesAsync();
                     }
                     else
@@ -185,7 +185,7 @@ namespace AssignmentOauth2Server.Controllers
                         {
                             AccessToken = PasswordGenerator.Generate(length: 40, allowed: Sets.Alphanumerics)
                         };
-                        HttpContext.Request.HttpContext.Items["loggedUserToken"] = credential.AccessToken;
+                        HttpContext.Session.SetString("loggedUserToken", credential.AccessToken);
                         _context.Credential.Add(credential);
                         await _context.SaveChangesAsync();
                     }

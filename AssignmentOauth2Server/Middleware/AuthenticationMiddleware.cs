@@ -20,19 +20,14 @@ namespace AssignmentOauth2Server.Middleware
         public async Task InvokeAsync(HttpContext context)
         {
             //bool isValid = context.Request.Headers.ContainsKey("Authorization");
-            var accessToken = context.Items["loggedUserToken"].ToString();
+            var accessToken = context.Session.GetString("loggedUserToken");
 
-            if (accessToken == null)
+            if (accessToken != null || context.Request.Path.ToString().Contains("/_api/v1/") || context.Request.Path.ToString().Contains("/Admin/Login"))
             {
-
-                // Call the next delegate/middleware in the pipeline
-                
                 await _next(context);
-                //await context.Response.WriteAsync(accessToken);
             }
-            else
-            {
-                await context.Response.WriteAsync(accessToken);
+            else {
+                context.Response.Redirect("/Admin/Login");
             }
 
 

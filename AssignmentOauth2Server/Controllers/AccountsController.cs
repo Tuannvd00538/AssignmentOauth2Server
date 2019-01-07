@@ -52,7 +52,7 @@ namespace AssignmentOauth2Server.Controllers
 
         // PUT: _api/v1/Accounts/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAccount([FromRoute] long id, [FromBody] Account account)
+        public async Task<IActionResult> PutAccount([FromRoute] long id, [FromBody] AccountInfomation account)
         {
             if (!ModelState.IsValid)
             {
