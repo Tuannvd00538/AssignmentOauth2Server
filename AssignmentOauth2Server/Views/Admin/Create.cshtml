@@ -6,6 +6,7 @@
 @{
     ViewData["Active"] = "CreateAdmin";
 }
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <h2>Create</h2>
 <h2>@ViewData["Role"]</h2>
 <hr />
@@ -25,7 +26,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="BirthDay" class="control-label"></label>
-                <input asp-for="BirthDay" class="form-control" />
+                @*<input asp-for="BirthDay" class="form-control" />*@
+                <input asp-for="BirthDay" type="text" id="datepicker" class="form-control">
                 <span asp-validation-for="BirthDay" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -34,7 +36,7 @@
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="button" value="Create" class="btn btn-default btn_create" />
             </div>
         </form>
     </div>
@@ -46,4 +48,33 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $("#datepicker").datepicker();
+        });
+    </script>
+    <script>
+        var url = "https://backendcontroller.azurewebsites.net";
+        $(document).on("click", ".btn_create", function () {
+            var data = {
+                "FirstName": $(this).parents("form").find("input[name='FirstName']").val(),
+                "LastName": $(this).parents("form").find("input[name='LastName']").val(),
+                "BirthDay": $(this).parents("form").find("input[name='BirthDay']").val(),
+                "Phone": $(this).parents("form").find("input[name='Phone']").val()
+            };
+            $.ajax({
+                type: "POST",
+                url: url+"/_api/v1/Accounts/D",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+            }).done(function (resp) {
+                window.location.href = window.location.origin;
+            }).fail(function (resp) {
+                alert(resp);
+            });
+            
+        });
+
+    </script>
 }
