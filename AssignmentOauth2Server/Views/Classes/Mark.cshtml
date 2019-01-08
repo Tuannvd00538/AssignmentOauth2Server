@@ -41,7 +41,14 @@
                                     @Html.DisplayFor(modelItem => item.Phone)
                                 </td>
                                 <td>
-                                    <a asp-action="Mark" asp-route-id="@item.Id">Detail</a>
+                                    @foreach (var markItem in ViewData["listMark"] as IList<Mark>)
+                                    {
+                                        @if (item.OwnerId == markItem.OwnerId)
+                                        {
+                                            <a asp-action="Mark" asp-route-id="@markItem.Id">Detail</a>
+                                        }
+                                    }
+
                                 </td>
 
                             </tr>
@@ -53,9 +60,10 @@
                 <h4>@ViewData["stuName"]</h4>
                 <form asp-action="Mark" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
                     <div class="form-group">
                         <label asp-for="Theory" class="control-label"></label>
-                        <input asp-for="Theory" class="form-control"  />
+                        <input asp-for="Theory" class="form-control" />
                         <span asp-validation-for="Theory" class="text-danger"></span>
                     </div>
                     <div class="form-group">
@@ -83,7 +91,7 @@
                         <label class="control-label">Pass</label>
                         <div></div>
                     </div>
-                    
+
                     <div class="form-group">
                         <input type="submit" value="Edit" class="btn btn-default btn_create" />
                     </div>
