@@ -46,8 +46,10 @@ namespace AssignmentOauth2Server.Controllers
         }
 
         // GET: Admin/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            ViewData["Roles"] = _context.Role.ToList();
+            ViewData["Class"] = _context.Class.ToList();
             return View();
         }
 
@@ -56,15 +58,149 @@ namespace AssignmentOauth2Server.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,BirthDay,Phone")] AccountInfomation account)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,BirthDay,Phone")] AccountInfomation accountInfomation, int[] classIds, int roleId)
         {
-            if (ModelState.IsValid)
+            //return new JsonResult(roleId);
+            //if (ModelState.IsValid)
+            //{
+            //    List<Class> listClass = new List<Class>();
+            //    foreach (var classId in classIds) {
+            //       var clazz = _context.Class.SingleOrDefault(s=>s.Id == classId);
+            //        if (clazz == null) {
+            //            return new JsonResult("Lỗi");
+            //        }
+            //        listClass.Add(clazz);
+            //    }
+
+            //    _context.Add(account);
+            //    await _context.SaveChangesAsync();
+            //    return RedirectToAction(nameof(Index));
+            //}
+            //return View(account);
+
+
+            if (!ModelState.IsValid)
             {
-                _context.Add(account);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return BadRequest(ModelState);
             }
-            return View(account);
+
+            //string[] listTypeRole = { "A", "D", "M" };
+
+            //if (!listTypeRole.Contains(Rnb))
+            //{
+            //    return BadRequest();
+            //}
+            var Rnb = "";
+            switch (roleId)
+            {
+                case 1:
+                    Rnb = "A";
+                    break;
+                case 2:
+                    Rnb = "M";
+                    break;
+                case 3:
+                    Rnb = "D";
+                    break;
+                default:
+                    return BadRequest();
+            }
+            //Generate RollNumber
+            var count = await _context.Account.CountAsync(a => a.RollNumber.Contains(Rnb)) + 1;
+            string rollNumber;
+
+            if (count < 10)
+            {
+                rollNumber = "0000" + count;
+            }
+            else if (count < 100)
+            {
+                rollNumber = "000" + count;
+            }
+            else if (count < 1000)
+            {
+                rollNumber = "00" + count;
+            }
+            else if (count < 10000)
+            {
+                rollNumber = "0" + count;
+            }
+            else
+            {
+                rollNumber = count.ToString();
+            }
+
+            var rnber = (Rnb + rollNumber).ToLower();
+
+            // Generate Email
+            var str = accountInfomation.FirstName.Split(" ");
+            string email = accountInfomation.LastName;
+            foreach (var item in str)
+            {
+                if (item.Any())
+                {
+                    email += item[0];
+                }
+            }
+
+            email = email.ToLower();
+
+            var emailGenerate = RemoveUTF8.RemoveSign4VietnameseString(email + rnber + "@siingroup.com").ToLower();
+            var passwordGenerate = RemoveUTF8.RemoveSign4VietnameseString(email + rnber);
+
+            //Create new account
+            Account account = new Account
+            {
+                RollNumber = rnber,
+                Email = emailGenerate,
+                Salt = PasswordHandle.GetInstance().GenerateSalt()
+            };
+            account.Password = PasswordHandle.GetInstance().EncryptPassword(passwordGenerate, account.Salt);
+
+            _context.Account.Add(account);
+
+            //Create thông tin đăng nhập để trả về response
+            Login login = new Login
+            {
+                Email = emailGenerate,
+                Password = passwordGenerate
+            };
+
+            //Check uniqe by phone
+            if (AccountExistsByPhone(accountInfomation.Phone))
+            {
+                return Conflict("Tài khoản đã tồn tại trên hệ thống, vui lòng kiểm tra lại!");
+            }
+            else
+            {
+                //Save account
+                await _context.SaveChangesAsync();
+
+                //Get ra account.Id để gán cho FK ownerId bên accountinfomation
+                accountInfomation.OwnerId = account.Id;
+                _context.AccountInfomation.Add(accountInfomation);
+                await _context.SaveChangesAsync();
+
+                foreach(var item in classIds)
+                {
+                    Classes classes = new Classes
+                    {
+                        OwnerId = account.Id,
+                        ClassId = item.ToString()
+                    };
+                    _context.Classes.Add(classes);
+                }
+
+                await _context.SaveChangesAsync();
+            }
+
+
+            return Created("", login);
+        }
+
+        private bool AccountExistsByPhone(string phone)
+        {
+            return _context.AccountInfomation.Any(e => e.Phone == phone);
         }
 
         // GET: Admin/Edit/5

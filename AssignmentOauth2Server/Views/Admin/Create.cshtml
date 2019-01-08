@@ -7,9 +7,16 @@
     ViewData["Active"] = "CreateAdmin";
 }
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+
 <h2>Create</h2>
 <h2>@ViewData["Role"]</h2>
 <hr />
+<style>
+    option {
+        background: #1a2035;
+    }
+</style>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
@@ -36,7 +43,41 @@
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="button" value="Create" class="btn btn-default btn_create" />
+                <label class="control-label">Role</label>
+                @*<select name="role" class="form-control"></select>*@
+                <select class="form-control select_role" name="roleId">
+                    @foreach (var item in ViewData["Roles"] as IList<Role>)
+                    {
+                        <option value="@item.Id">@Html.DisplayFor(modelItem => item.Name)</option>
+                    }
+                </select>
+                @*<div>
+                    @foreach (var item in ViewData["Roles"] as IList<Role>)
+                    {
+                        @Html.DisplayFor(modelItem => item.Name)
+                        <input type="checkbox" name="roleIds[]" value="@item.Id" />
+                    }
+                </div>*@
+
+            </div>
+            <div class="form-group">
+                <label class="control-label">Class</label>
+                <select class="form-control select_class" name="classIds[]" multiple="multiple">
+                    @foreach (var item in ViewData["Class"] as IList<Class>)
+                    {
+                        <option value="@item.Id">@Html.DisplayFor(modelItem => item.Name)</option>
+                    }
+                </select>
+                @*<div>
+                    @foreach (var item in ViewData["Class"] as IList<Class>)
+                    {
+                        @Html.DisplayFor(modelItem => item.Name)
+                        <input type="checkbox" name="classIds[]" value="@item.Id" />
+                    }
+                </div>*@
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default btn_create" />
             </div>
         </form>
     </div>
@@ -48,33 +89,72 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
         $(function () {
             $("#datepicker").datepicker();
         });
+        $(document).ready(function () {
+            $('.select_role').select2();
+            $('.select_class').select2();
+        });
     </script>
-    <script>
-        var url = "https://backendcontroller.azurewebsites.net";
-        $(document).on("click", ".btn_create", function () {
-            var data = {
-                "FirstName": $(this).parents("form").find("input[name='FirstName']").val(),
-                "LastName": $(this).parents("form").find("input[name='LastName']").val(),
-                "BirthDay": $(this).parents("form").find("input[name='BirthDay']").val(),
-                "Phone": $(this).parents("form").find("input[name='Phone']").val()
-            };
+    @*<script>
+            var url = "https://backendcontroller.azurewebsites.net";
+            $(document).on("click", ".btn_create", function () {
+                var data = {
+                    "FirstName": $(this).parents("form").find("input[name='FirstName']").val(),
+                    "LastName": $(this).parents("form").find("input[name='LastName']").val(),
+                    "BirthDay": $(this).parents("form").find("input[name='BirthDay']").val(),
+                    "Phone": $(this).parents("form").find("input[name='Phone']").val()
+                };
+                $.ajax({
+                    type: "POST",
+                    url: url + "/_api/v1/Accounts/" + $("select[name='role']").val(),
+                    contentType: "application/json",
+                    data: JSON.stringify(data),
+                }).done(function (resp) {
+                    window.location.href = window.location.origin;
+                }).fail(function (resp) {
+                    alert(resp);
+                });
+
+            });
+
             $.ajax({
-                type: "POST",
-                url: url+"/_api/v1/Accounts/D",
+                type: "GET",
+                url: url + "/_api/v1/Roles",
                 contentType: "application/json",
-                data: JSON.stringify(data),
             }).done(function (resp) {
-                window.location.href = window.location.origin;
+                console.log(resp);
+                var option_role = "";
+                for (var i = 0; i < resp.length; i++) {
+                    option_role += '<option value="' + resp[i].name.substring(0, 1) + '">' + resp[i].name + '</option>';
+                }
+                $("select[name='role']").html(option_role);
+
+
             }).fail(function (resp) {
                 alert(resp);
             });
-            
-        });
 
-    </script>
+            $.ajax({
+                type: "GET",
+                url: url + "/_api/v1/Classes",
+                contentType: "application/json",
+            }).done(function (resp) {
+                console.log(resp);
+                var option_classes = "";
+                for (var i = 0; i < resp.length; i++) {
+                    option_classes += '<option value="' + resp[i].id + '">' + resp[i].name + '</option>';
+                }
+
+                $("select[name='class']").html(option_classes);
+
+
+            }).fail(function (resp) {
+                alert(resp);
+            });
+        </script>*@
 }
