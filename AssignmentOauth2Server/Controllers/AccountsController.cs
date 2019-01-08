@@ -85,102 +85,102 @@ namespace AssignmentOauth2Server.Controllers
             return NoContent();
         }
 
-        // POST: _api/v1/Accounts/A~D~M
-        [HttpPost("{Rnb}")]
-        public async Task<IActionResult> PostAccount([FromRoute] string Rnb, [FromBody] AccountInfomation accountInfomation)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //// POST: _api/v1/Accounts/A~D~M
+        //[HttpPost("{Rnb}")]
+        //public async Task<IActionResult> PostAccount([FromRoute] string Rnb, [FromBody] AccountInfomation accountInfomation)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            string[] listTypeRole = { "A", "D", "M" };
+        //    string[] listTypeRole = { "A", "D", "M" };
 
-            if (!listTypeRole.Contains(Rnb))
-            {
-                return BadRequest();
-            }
+        //    if (!listTypeRole.Contains(Rnb))
+        //    {
+        //        return BadRequest();
+        //    }
 
-            //Generate RollNumber
-            var count = await _context.Account.CountAsync(a => a.RollNumber.Contains(Rnb)) + 1;
-            string rollNumber;
+        //    //Generate RollNumber
+        //    var count = await _context.Account.CountAsync(a => a.RollNumber.Contains(Rnb)) + 1;
+        //    string rollNumber;
 
-            if (count < 10)
-            {
-                rollNumber = "0000" + count;
-            }
-            else if (count < 100)
-            {
-                rollNumber = "000" + count;
-            }
-            else if (count < 1000)
-            {
-                rollNumber = "00" + count;
-            }
-            else if (count < 10000)
-            {
-                rollNumber = "0" + count;
-            }
-            else
-            {
-                rollNumber = count.ToString();
-            }
+        //    if (count < 10)
+        //    {
+        //        rollNumber = "0000" + count;
+        //    }
+        //    else if (count < 100)
+        //    {
+        //        rollNumber = "000" + count;
+        //    }
+        //    else if (count < 1000)
+        //    {
+        //        rollNumber = "00" + count;
+        //    }
+        //    else if (count < 10000)
+        //    {
+        //        rollNumber = "0" + count;
+        //    }
+        //    else
+        //    {
+        //        rollNumber = count.ToString();
+        //    }
 
-            var rnber = (Rnb + rollNumber).ToLower();
+        //    var rnber = (Rnb + rollNumber).ToLower();
 
-            // Generate Email
-            var str = accountInfomation.FirstName.Split(" ");
-            string email = accountInfomation.LastName;
-            foreach (var item in str)
-            {
-                if (item.Any())
-                {
-                    email += item[0];
-                }
-            }
+        //    // Generate Email
+        //    var str = accountInfomation.FirstName.Split(" ");
+        //    string email = accountInfomation.LastName;
+        //    foreach (var item in str)
+        //    {
+        //        if (item.Any())
+        //        {
+        //            email += item[0];
+        //        }
+        //    }
 
-            email = email.ToLower();
+        //    email = email.ToLower();
 
-            var emailGenerate = RemoveUTF8.RemoveSign4VietnameseString(email + rnber + "@siingroup.com").ToLower();
-            var passwordGenerate = RemoveUTF8.RemoveSign4VietnameseString(email + rnber);
+        //    var emailGenerate = RemoveUTF8.RemoveSign4VietnameseString(email + rnber + "@siingroup.com").ToLower();
+        //    var passwordGenerate = RemoveUTF8.RemoveSign4VietnameseString(email + rnber);
 
-            //Create new account
-            Account account = new Account
-            {
-                RollNumber = rnber,
-                Email = emailGenerate,
-                Salt = PasswordHandle.GetInstance().GenerateSalt()
-            };
-            account.Password = PasswordHandle.GetInstance().EncryptPassword(passwordGenerate, account.Salt);
+        //    //Create new account
+        //    Account account = new Account
+        //    {
+        //        RollNumber = rnber,
+        //        Email = emailGenerate,
+        //        Salt = PasswordHandle.GetInstance().GenerateSalt()
+        //    };
+        //    account.Password = PasswordHandle.GetInstance().EncryptPassword(passwordGenerate, account.Salt);
 
-            _context.Account.Add(account);
+        //    _context.Account.Add(account);
             
-            //Create thông tin đăng nhập để trả về response
-            Login login = new Login
-            {
-                Email = emailGenerate,
-                Password = passwordGenerate
-            };
+        //    //Create thông tin đăng nhập để trả về response
+        //    Login login = new Login
+        //    {
+        //        Email = emailGenerate,
+        //        Password = passwordGenerate
+        //    };
 
-            //Check uniqe by phone
-            if (AccountExistsByPhone(accountInfomation.Phone))
-            {
-                return Conflict("Tài khoản đã tồn tại trên hệ thống, vui lòng kiểm tra lại!");
-            }
-            else
-            {
-                //Save account
-                await _context.SaveChangesAsync();
+        //    //Check uniqe by phone
+        //    if (AccountExistsByPhone(accountInfomation.Phone))
+        //    {
+        //        return Conflict("Tài khoản đã tồn tại trên hệ thống, vui lòng kiểm tra lại!");
+        //    }
+        //    else
+        //    {
+        //        //Save account
+        //        await _context.SaveChangesAsync();
 
-                //Get ra account.Id để gán cho FK ownerId bên accountinfomation
-                accountInfomation.OwnerId = account.Id;
-                _context.AccountInfomation.Add(accountInfomation);
-                await _context.SaveChangesAsync();
-            }
+        //        //Get ra account.Id để gán cho FK ownerId bên accountinfomation
+        //        accountInfomation.OwnerId = account.Id;
+        //        _context.AccountInfomation.Add(accountInfomation);
+        //        await _context.SaveChangesAsync();
+        //    }
 
 
-            return Created("", login);
-        }
+        //    return Created("", login);
+        //}
 
         // DELETE: _api/v1/Accounts/5
         [HttpDelete("{id}")]

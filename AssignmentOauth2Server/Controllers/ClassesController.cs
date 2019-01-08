@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AssignmentOauth2Server.Models;
 
 namespace AssignmentOauth2Server.Controllers
 {
-    [Route("_api/v1/[controller]")]
-    [ApiController]
-    public class ClassesController : ControllerBase
+    public class ClassesController : Controller
     {
         private readonly AssignmentOauth2ServerContext _context;
 
@@ -20,101 +18,130 @@ namespace AssignmentOauth2Server.Controllers
             _context = context;
         }
 
-        // GET: _api/v1/Classes
-        [HttpGet]
-        public IEnumerable<Class> GetClass()
+        // GET: Classes
+        public async Task<IActionResult> Index()
         {
-            return _context.Class;
+            return View(await _context.Class.ToListAsync());
         }
 
-        // GET: _api/v1/Classes/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetClass([FromRoute] int id)
+        // GET: Classes/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
-            if (!ModelState.IsValid)
+            if (id == null)
             {
-                return BadRequest(ModelState);
+                return NotFound();
             }
 
-            var @class = await _context.Class.FindAsync(id);
-
+            var @class = await _context.Class
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (@class == null)
             {
                 return NotFound();
             }
 
-            return Ok(@class);
+            return View(@class);
         }
 
-        // PUT: _api/v1/Classes/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutClass([FromRoute] int id, [FromBody] Class @class)
+        // GET: Classes/Create
+        public IActionResult Create()
         {
-            if (!ModelState.IsValid)
+            return View();
+        }
+
+        // POST: Classes/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Name,StartTime,EndTime,IntendTime,Status")] Class @class)
+        {
+            if (ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                _context.Add(@class);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(@class);
+        }
+
+        // GET: Classes/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
             }
 
+            var @class = await _context.Class.FindAsync(id);
+            if (@class == null)
+            {
+                return NotFound();
+            }
+            return View(@class);
+        }
+
+        // POST: Classes/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartTime,EndTime,IntendTime,Status")] Class @class)
+        {
             if (id != @class.Id)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(@class).State = EntityState.Modified;
-
-            try
+            if (ModelState.IsValid)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ClassExists(id))
+                try
                 {
-                    return NotFound();
+                    _context.Update(@class);
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    if (!ClassExists(@class.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
+                return RedirectToAction(nameof(Index));
             }
-
-            return NoContent();
+            return View(@class);
         }
 
-        // POST: _api/v1/Classes
-        [HttpPost]
-        public async Task<IActionResult> PostClass([FromBody] Class @class)
+        // GET: Classes/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (!ModelState.IsValid)
+            if (id == null)
             {
-                return BadRequest(ModelState);
+                return NotFound();
             }
 
-            _context.Class.Add(@class);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetClass", new { id = @class.Id }, @class);
-        }
-
-        // DELETE: _api/v1/Classes/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteClass([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var @class = await _context.Class.FindAsync(id);
+            var @class = await _context.Class
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (@class == null)
             {
                 return NotFound();
             }
 
+            return View(@class);
+        }
+
+        // POST: Classes/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var @class = await _context.Class.FindAsync(id);
             _context.Class.Remove(@class);
             await _context.SaveChangesAsync();
-
-            return Ok(@class);
+            return RedirectToAction(nameof(Index));
         }
 
         private bool ClassExists(int id)

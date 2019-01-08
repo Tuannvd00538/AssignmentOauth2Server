@@ -34,8 +34,6 @@ namespace AssignmentOauth2Server.Models
         public AccountGender Gender { get; set; }
 
         public Account Account { get; set; }
-
-        public List<Role> RoleList { get; set; }
     }
 
     public enum AccountGender

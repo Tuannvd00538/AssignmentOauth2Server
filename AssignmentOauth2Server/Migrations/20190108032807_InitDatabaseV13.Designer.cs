@@ -4,14 +4,16 @@ using AssignmentOauth2Server.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AssignmentOauth2Server.Migrations
 {
     [DbContext(typeof(AssignmentOauth2ServerContext))]
-    partial class AssignmentOauth2ServerContextModelSnapshot : ModelSnapshot
+    [Migration("20190108032807_InitDatabaseV13")]
+    partial class InitDatabaseV13
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -130,7 +132,7 @@ namespace AssignmentOauth2Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Default");
+                    b.ToTable("AccountLogsDefault");
                 });
 
             modelBuilder.Entity("AssignmentOauth2Server.Models.AccountLogsMail", b =>
@@ -145,7 +147,7 @@ namespace AssignmentOauth2Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Mail");
+                    b.ToTable("AccountLogsMail");
                 });
 
             modelBuilder.Entity("AssignmentOauth2Server.Models.AccountLogsMark", b =>
@@ -162,7 +164,7 @@ namespace AssignmentOauth2Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Mark");
+                    b.ToTable("AccountLogsMark");
                 });
 
             modelBuilder.Entity("AssignmentOauth2Server.Models.Class", b =>
@@ -192,7 +194,7 @@ namespace AssignmentOauth2Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ClassId");
+                    b.Property<string>("ClassId");
 
                     b.Property<long>("OwnerId");
 

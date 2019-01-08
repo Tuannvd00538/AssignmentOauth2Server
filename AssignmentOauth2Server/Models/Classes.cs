@@ -16,6 +16,6 @@ namespace AssignmentOauth2Server.Models
         public long OwnerId { get; set; }
         
         [ForeignKey("Class")]
-        public string ClassId { get; set; }
+        public int ClassId { get; set; }
     }
 }

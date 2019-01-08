@@ -60,36 +60,10 @@ namespace AssignmentOauth2Server.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,BirthDay,Phone")] AccountInfomation accountInfomation, int[] classIds, int roleId)
         {
-            //return new JsonResult(roleId);
-            //if (ModelState.IsValid)
-            //{
-            //    List<Class> listClass = new List<Class>();
-            //    foreach (var classId in classIds) {
-            //       var clazz = _context.Class.SingleOrDefault(s=>s.Id == classId);
-            //        if (clazz == null) {
-            //            return new JsonResult("Lỗi");
-            //        }
-            //        listClass.Add(clazz);
-            //    }
-
-            //    _context.Add(account);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //return View(account);
-
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            //string[] listTypeRole = { "A", "D", "M" };
-
-            //if (!listTypeRole.Contains(Rnb))
-            //{
-            //    return BadRequest();
-            //}
             var Rnb = "";
             switch (roleId)
             {
@@ -181,19 +155,48 @@ namespace AssignmentOauth2Server.Controllers
                 _context.AccountInfomation.Add(accountInfomation);
                 await _context.SaveChangesAsync();
 
-                foreach(var item in classIds)
+                AccountLogsDefault log = new AccountLogsDefault
+                {
+                    Title = "Đã tạo tài khoản với email " + login.Email + "!"
+                };
+
+                _context.Default.Add(log);
+
+                AccountLogs al = new AccountLogs
+                {
+                    OwnerId = account.Id,
+                    CreatedBy = accountInfomation.FirstName + " " + accountInfomation.LastName,
+                    Default = log
+                };
+
+                _context.Log.Add(al);
+
+                await _context.SaveChangesAsync();
+
+                foreach (var item in classIds)
                 {
                     Classes classes = new Classes
                     {
                         OwnerId = account.Id,
-                        ClassId = item.ToString()
+                        ClassId = item
                     };
                     _context.Classes.Add(classes);
+                    AccountLogsDefault logs = new AccountLogsDefault();
+                    var classAccount = _context.Class.SingleOrDefault(a => a.Id == classes.ClassId);
+                    logs.Title = accountInfomation.FirstName + " " + accountInfomation.LastName + " đã xếp bạn vào lớp " + classAccount.Name;
+                    _context.Default.Add(logs);
+                    AccountLogs als = new AccountLogs
+                    {
+                        OwnerId = account.Id,
+                        CreatedBy = accountInfomation.FirstName + " " + accountInfomation.LastName,
+                        Default = logs
+                    };
+
+                    _context.Log.Add(als);
                 }
 
                 await _context.SaveChangesAsync();
             }
-
 
             return Created("", login);
         }

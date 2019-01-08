@@ -4,14 +4,16 @@ using AssignmentOauth2Server.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AssignmentOauth2Server.Migrations
 {
     [DbContext(typeof(AssignmentOauth2ServerContext))]
-    partial class AssignmentOauth2ServerContextModelSnapshot : ModelSnapshot
+    [Migration("20190108031853_InitDatabaseV11")]
+    partial class InitDatabaseV11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,82 +91,6 @@ namespace AssignmentOauth2Server.Migrations
                     b.ToTable("AccountInfomation");
                 });
 
-            modelBuilder.Entity("AssignmentOauth2Server.Models.AccountLogs", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt");
-
-                    b.Property<string>("CreatedBy");
-
-                    b.Property<int?>("DefaultId");
-
-                    b.Property<int?>("MailId");
-
-                    b.Property<int?>("MarkId");
-
-                    b.Property<long>("OwnerId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DefaultId");
-
-                    b.HasIndex("MailId");
-
-                    b.HasIndex("MarkId");
-
-                    b.ToTable("Log");
-                });
-
-            modelBuilder.Entity("AssignmentOauth2Server.Models.AccountLogsDefault", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Title");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Default");
-                });
-
-            modelBuilder.Entity("AssignmentOauth2Server.Models.AccountLogsMail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Title");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Mail");
-                });
-
-            modelBuilder.Entity("AssignmentOauth2Server.Models.AccountLogsMark", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ClassId");
-
-                    b.Property<int>("SubjectId");
-
-                    b.Property<string>("Title");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Mark");
-                });
-
             modelBuilder.Entity("AssignmentOauth2Server.Models.Class", b =>
                 {
                     b.Property<int>("Id")
@@ -192,7 +118,7 @@ namespace AssignmentOauth2Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ClassId");
+                    b.Property<string>("ClassId");
 
                     b.Property<long>("OwnerId");
 
@@ -268,21 +194,6 @@ namespace AssignmentOauth2Server.Migrations
                         .WithOne("AccountInfomation")
                         .HasForeignKey("AssignmentOauth2Server.Models.AccountInfomation", "OwnerId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("AssignmentOauth2Server.Models.AccountLogs", b =>
-                {
-                    b.HasOne("AssignmentOauth2Server.Models.AccountLogsDefault", "Default")
-                        .WithMany()
-                        .HasForeignKey("DefaultId");
-
-                    b.HasOne("AssignmentOauth2Server.Models.AccountLogsMail", "Mail")
-                        .WithMany()
-                        .HasForeignKey("MailId");
-
-                    b.HasOne("AssignmentOauth2Server.Models.AccountLogsMark", "Mark")
-                        .WithMany()
-                        .HasForeignKey("MarkId");
                 });
 #pragma warning restore 612, 618
         }

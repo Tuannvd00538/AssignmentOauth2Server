@@ -30,5 +30,13 @@ namespace AssignmentOauth2Server.Models
         public DbSet<AssignmentOauth2Server.Models.Classes> Classes { get; set; }
 
         public DbSet<AssignmentOauth2Server.Models.Role> Role { get; set; }
+
+        public DbSet<AssignmentOauth2Server.Models.AccountLogs> Log { get; set; }
+
+        public DbSet<AssignmentOauth2Server.Models.AccountLogsDefault> Default { get; set; }
+
+        public DbSet<AssignmentOauth2Server.Models.AccountLogsMail> Mail { get; set; }
+
+        public DbSet<AssignmentOauth2Server.Models.AccountLogsMark> Mark { get; set; }
     }
 }
