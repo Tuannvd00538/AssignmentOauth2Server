@@ -286,6 +286,7 @@ namespace AssignmentOauth2Server.Controllers
         {
             var mark = _context.MarkCurrent.SingleOrDefault(c => c.Id == id);
             var student = _context.AccountInfomation.SingleOrDefault(c => c.OwnerId == mark.OwnerId);
+            var listMark = _context.MarkCurrent.Where(c => c.SubjectClassId == mark.SubjectClassId).ToList();
 
             var subjectClass = _context.SubjectClass.SingleOrDefault(c => c.Id == mark.SubjectClassId);
             var subject = _context.Subject.SingleOrDefault(c => c.Id == subjectClass.SubjectId);
@@ -298,8 +299,10 @@ namespace AssignmentOauth2Server.Controllers
                 var accInfo = _context.AccountInfomation.SingleOrDefault(c => c.OwnerId == item.OwnerId);
                 accList.Add(accInfo);
             }
+
             ViewData["listStudent"] = accList;
             ViewData["mark"] = mark;
+            ViewData["listMark"] = listMark;
             ViewData["stuName"] = student.FirstName + " " + student.LastName;
             ViewData["subjectName"] = subject.Name;
             ViewData["classCurrent"] = classCurrent.Name;
@@ -314,7 +317,7 @@ namespace AssignmentOauth2Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Mark(int? id, [Bind("Id, Theory, Practice, Assignment")] Mark mark)
         {
-            //return new JsonResult(mark);
+            return new JsonResult(mark);
             if (id != mark.Id)
             {
                 return NotFound();
