@@ -49,7 +49,7 @@ namespace AssignmentOauth2Server
             services.AddSession(options =>
             {
                 // Set a short timeout for easy testing.
-                options.IdleTimeout = TimeSpan.FromSeconds(60 * 5);
+                options.IdleTimeout = TimeSpan.FromSeconds(60 * 30);
                 options.Cookie.HttpOnly = true;
             });
            
@@ -75,7 +75,7 @@ namespace AssignmentOauth2Server
           
             app.UseCookiePolicy();
             app.UseSession();
-            app.UseMiddleware<AuthenticationMiddleware>();
+            //app.UseMiddleware<AuthenticationMiddleware>();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

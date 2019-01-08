@@ -1,0 +1,79 @@
+﻿@model AssignmentOauth2Server.Models.SubjectClass
+
+@{
+    ViewData["Title"] = "AddSubject";
+}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<h2>AddSubject [ @ViewData["className"]]</h2>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="AddSubject">
+            <div class="form-group d-none">
+                <label asp-for="ClassId" class="control-label"></label>
+                <input asp-for="ClassId" type="text" class="form-control" value="@ViewData["classId"]">
+                <span asp-validation-for="ClassId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Subject</label>
+                <select class="form-control select_subject" name="SubjectId">
+                    @foreach (var item in ViewData["subjectAllList"] as IList<Subject>)
+                    {
+                        <option value="@item.Id">@Html.DisplayFor(modelItem => item.Name)</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartTime" class="control-label"></label>
+                <input asp-for="StartTime" type="text" class="form-control datepicker">
+                <span asp-validation-for="StartTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndTime" class="control-label"></label>
+                <input asp-for="EndTime" type="text" class="form-control datepicker">
+                <span asp-validation-for="EndTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IntendTime" class="control-label"></label>
+                <input asp-for="IntendTime" type="text" class="form-control datepicker">
+                <span asp-validation-for="IntendTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <h4>Current Subject</h4>
+        <hr />
+        @foreach (var item in ViewData["subjectList"] as IList<Subject>)
+        {
+            <div class="badge badge-secondary">
+                @Html.DisplayFor(modelItem => item.Name)
+            </div>
+
+        }
+    </div>
+</div>
+
+<div>
+    <a asp-action="Details" asp-route-id="@ViewData["classId"]">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $(".datepicker").datepicker();
+        });
+        $(document).ready(function () {
+            $('.select_subject').select2();
+        });
+    </script>
+}

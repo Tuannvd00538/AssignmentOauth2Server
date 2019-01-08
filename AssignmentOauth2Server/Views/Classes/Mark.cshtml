@@ -1,0 +1,100 @@
+﻿@model AssignmentOauth2Server.Models.Mark
+
+@{
+    ViewData["Title"] = "Details";
+}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+
+
+
+<h2>@ViewData["subjectName"] [@ViewData["classCurrent"]] </h2>
+<div>
+    <hr />
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-6">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                FullName
+                            </th>
+
+                            <th>
+                                Phone
+                            </th>
+                            <th>
+                                
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewData["listStudent"] as IList<AccountInfomation>)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Phone)
+                                </td>
+                                <td>
+                                    <a asp-action="Mark" asp-route-id="@item.Id">Detail</a>
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-6">
+                <h4>@ViewData["stuName"]</h4>
+                <form asp-action="Mark" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Theory" class="control-label"></label>
+                        <input asp-for="Theory" class="form-control"  />
+                        <span asp-validation-for="Theory" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Practice" class="control-label"></label>
+                        <input asp-for="Practice" class="form-control" />
+                        <span asp-validation-for="Practice" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Assignment" class="control-label"></label>
+                        <input asp-for="Assignment" class="form-control" />
+                        <span asp-validation-for="Assignment" class="text-danger"></span>
+                    </div>
+                    <div class="form-group d-none">
+                        <label asp-for="OwnerId" class="control-label"></label>
+                        <input asp-for="OwnerId" class="form-control" />
+                        <span asp-validation-for="OwnerId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group d-none">
+                        <label asp-for="SubjectClassId" class="control-label"></label>
+                        <input asp-for="SubjectClassId" class="form-control" />
+                        <span asp-validation-for="SubjectClassId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Pass</label>
+                        <div></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="submit" value="Edit" class="btn btn-default btn_create" />
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+
