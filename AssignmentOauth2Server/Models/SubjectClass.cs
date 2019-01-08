@@ -22,7 +22,7 @@ namespace AssignmentOauth2Server.Models
         public int SubjectId { get; set; }
         
         [ForeignKey("Class")]
-        public string ClassId { get; set; }
+        public int ClassId { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

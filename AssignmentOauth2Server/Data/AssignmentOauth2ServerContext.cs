@@ -38,5 +38,7 @@ namespace AssignmentOauth2Server.Models
         public DbSet<AssignmentOauth2Server.Models.AccountLogsMail> Mail { get; set; }
 
         public DbSet<AssignmentOauth2Server.Models.AccountLogsMark> Mark { get; set; }
+        public DbSet<AssignmentOauth2Server.Models.Mark> MarkCurrent { get; set; }
+        public DbSet<AssignmentOauth2Server.Models.SubjectClass> SubjectClass { get; set; }
     }
 }

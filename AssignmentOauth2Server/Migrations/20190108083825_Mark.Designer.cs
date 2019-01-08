@@ -4,14 +4,16 @@ using AssignmentOauth2Server.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AssignmentOauth2Server.Migrations
 {
     [DbContext(typeof(AssignmentOauth2ServerContext))]
-    partial class AssignmentOauth2ServerContextModelSnapshot : ModelSnapshot
+    [Migration("20190108083825_Mark")]
+    partial class Mark
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,33 +224,6 @@ namespace AssignmentOauth2Server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Credential");
-                });
-
-            modelBuilder.Entity("AssignmentOauth2Server.Models.Mark", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<float>("Assignment");
-
-                    b.Property<DateTime>("CreatedAt");
-
-                    b.Property<long>("OwnerId");
-
-                    b.Property<float>("Practice");
-
-                    b.Property<int>("Status");
-
-                    b.Property<int>("SubjectClassId");
-
-                    b.Property<float>("Theory");
-
-                    b.Property<DateTime>("UpdatedAt");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MarkCurrent");
                 });
 
             modelBuilder.Entity("AssignmentOauth2Server.Models.Role", b =>

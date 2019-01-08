@@ -16,21 +16,22 @@ namespace AssignmentOauth2Server.Models
 
         public Mark() { }
 
-        public Mark(MarkType type, int value)
-        {
-            this.MarkType = type;
-            this.Value = value;
-            this.GenerateStatus();
-            this.CreatedAt = DateTime.Now;
-            this.UpdatedAt = DateTime.Now;
-        }
+        //public Mark(MarkType type, int value)
+        //{
+        //    this.MarkType = type;
+        //    this.Value = value;
+        //    this.GenerateStatus();
+        //    this.CreatedAt = DateTime.Now;
+        //    this.UpdatedAt = DateTime.Now;
+        //}
 
-        public Mark(MarkType type, int value, int subjectId, long accountId)
+        public Mark(int Theory, int Practice, int Assignment , int subjectClassId, long accountId)
         {
-            this.SubjectId = subjectId;
+            this.SubjectClassId = subjectClassId;
             this.OwnerId = accountId;
-            this.MarkType = type;
-            this.Value = value;
+            this.Theory = Theory;
+            this.Practice = Practice;
+            this.Assignment = Assignment;
             this.GenerateStatus();
             this.CreatedAt = DateTime.Now;
             this.UpdatedAt = DateTime.Now;
@@ -38,29 +39,21 @@ namespace AssignmentOauth2Server.Models
 
         private void GenerateStatus()
         {
-            int max = 0;
-            switch (this.MarkType)
-            {
-                case MarkType.Theory:
-                    max = MaxTheory;
-                    break;
-                case MarkType.Practice:
-                    max = MaxPratice;
-                    break;
-                case MarkType.Assignment:
-                    max = MaxAssignment;
-                    break;
-            }
-            double percent = (this.Value / max) * 100;
-            this.Status = percent >= PercentToPass ? MarkStatus.Pass : MarkStatus.Fail;
+            double percentTheory = (this.Theory / MaxTheory) * 100;
+            double percentPractice = (this.Practice / MaxPratice) * 100;
+            double percentAssignment = (this.Assignment / MaxAssignment) * 100;
+
+            this.Status = percentTheory >= PercentToPass && percentPractice >= PercentToPass && percentAssignment >= PercentToPass ? MarkStatus.Pass : MarkStatus.Fail;
         }
 
         [Key]
         public long Id { get; set; }
 
-        public float Value { get; set; }
+        public float Theory { get; set; }
 
-        public MarkType MarkType { get; set; }
+        public float Practice { get; set; }
+
+        public float Assignment { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
@@ -71,16 +64,16 @@ namespace AssignmentOauth2Server.Models
         [ForeignKey("Account")]
         public long OwnerId { get; set; }
         
-        [ForeignKey("Subject")]
-        public int SubjectId { get; set; }
+        [ForeignKey("SubjectClass")]
+        public int SubjectClassId { get; set; }
     }
 
-    public enum MarkType
-    {
-        Theory = 0,
-        Practice = 1,
-        Assignment = 3
-    }
+    //public enum MarkType
+    //{
+    //    Theory = 0,
+    //    Practice = 1,
+    //    Assignment = 3
+    //}
 
     public enum MarkStatus
     {
